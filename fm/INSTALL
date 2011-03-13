@@ -1,0 +1,1 @@
+You need to modify the appropriate path for the required libraries and header files in .Libs.mk and .Include.mk
