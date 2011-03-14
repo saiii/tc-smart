@@ -42,8 +42,6 @@ void on_go_forward(GtkAction* act, HakoWindow* win)
 void on_view_loaded( FmFolderView* view, FmPath* path, gpointer user_data)
 {
   HakoWindow* win = (HakoWindow*)user_data;
-  FmPathEntry* entry = FM_PATH_ENTRY(win->location);
-  fm_path_entry_set_model(entry, path, view->model);
 
   if (NavStack_left_size(win->nav_stack) > 0)
   {
