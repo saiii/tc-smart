@@ -20,9 +20,18 @@
 #include "main.h"
 #include "config.h"
 
+#define VERSION_STRING "TcSmartFm version 0.0.1-alpha"
+
 int 
 main(int argc, char** argv)
 {
+  if (argc == 2 && strcmp(argv[1], "--version") == 0)
+  {
+    const char * version = VERSION_STRING;
+    printf("%s\n", version);
+    return 0; 
+  }
+
   GtkWidget* window;
   gtk_init(&argc, &argv);
 
@@ -32,10 +41,6 @@ main(int argc, char** argv)
   window = fm_main_win_new();
   gtk_window_set_default_size(GTK_WINDOW(window), 640, 480);
   gtk_widget_show(window);
-
-  FmPath* path = fm_path_new(Config_Get("DefaultDirectory"));
-  fm_main_win_chdir(FM_MAIN_WIN(window), path);
-  fm_path_unref(path);
 
   gtk_main();
 
