@@ -19,7 +19,7 @@
 #include <fm-path-entry.h>
 #include "main.h"
 
-void on_go_back(GtkAction* act, HakoWindow* win)
+void on_go_back(GtkAction* act, TcSmartWindow* win)
 {
   if (NavStack_left_size(win->nav_stack) > 1)
   {
@@ -29,7 +29,7 @@ void on_go_back(GtkAction* act, HakoWindow* win)
   }
 }
 
-void on_go_forward(GtkAction* act, HakoWindow* win)
+void on_go_forward(GtkAction* act, TcSmartWindow* win)
 {
   if (NavStack_right_size(win->nav_stack) > 0)
   {
@@ -41,7 +41,7 @@ void on_go_forward(GtkAction* act, HakoWindow* win)
 
 void on_view_loaded( FmFolderView* view, FmPath* path, gpointer user_data)
 {
-  HakoWindow* win = (HakoWindow*)user_data;
+  TcSmartWindow* win = (TcSmartWindow*)user_data;
 
   if (NavStack_left_size(win->nav_stack) > 0)
   {

@@ -22,19 +22,19 @@
 #include "config.h"
 #include "actionsMap.h"
 
-G_DEFINE_TYPE(HakoWindow, fm_main_win, GTK_TYPE_WINDOW);
+G_DEFINE_TYPE(TcSmartWindow, fm_main_win, GTK_TYPE_WINDOW);
 
 static guint n_wins = 0;
 
-extern void on_file_clicked(FmFolderView* fv, FmFolderViewClickType type, FmFileInfo* fi, HakoWindow* win);
-extern void on_sel_changed(FmFolderView* fv, FmFileInfoList* files, HakoWindow* win);
-extern void on_status(FmFolderView* fv, const char* msg, HakoWindow* win);
-extern void on_entry_activate(GtkEntry* entry, HakoWindow* self);
+extern void on_file_clicked(FmFolderView* fv, FmFolderViewClickType type, FmFileInfo* fi, TcSmartWindow* win);
+extern void on_sel_changed(FmFolderView* fv, FmFileInfoList* files, TcSmartWindow* win);
+extern void on_status(FmFolderView* fv, const char* msg, TcSmartWindow* win);
+extern void on_entry_activate(GtkEntry* entry, TcSmartWindow* self);
 extern void on_view_loaded( FmFolderView* view, FmPath* path, gpointer user_data);
 
 gboolean open_folder_func(GAppLaunchContext* ctx, GList* folder_infos, gpointer user_data, GError** err)
 {
-  HakoWindow* win = FM_MAIN_WIN(user_data);
+  TcSmartWindow* win = FM_MAIN_WIN(user_data);
   GList* l = folder_infos;
   FmFileInfo* fi = (FmFileInfo*)l->data;
   fm_main_win_chdir(win, fi->path);
@@ -42,7 +42,7 @@ gboolean open_folder_func(GAppLaunchContext* ctx, GList* folder_infos, gpointer 
 }
 
 void 
-fm_main_win_init(HakoWindow *self)
+fm_main_win_init(TcSmartWindow *self)
 {
   GtkWidget *vbox, *toolitem;
   GtkUIManager* ui;
@@ -72,10 +72,14 @@ fm_main_win_init(HakoWindow *self)
   ui = gtk_ui_manager_new();
   act_grp = gtk_action_group_new("Main");
   gtk_action_group_add_actions(act_grp, main_win_actions, G_N_ELEMENTS(main_win_actions), self);
-  gtk_action_group_add_toggle_actions(act_grp, main_win_toggle_actions, G_N_ELEMENTS(main_win_toggle_actions), self);
-  gtk_action_group_add_radio_actions(act_grp, main_win_mode_actions, G_N_ELEMENTS(main_win_mode_actions), FM_FV_ICON_VIEW, on_change_mode, self);
-  gtk_action_group_add_radio_actions(act_grp, main_win_sort_type_actions, G_N_ELEMENTS(main_win_sort_type_actions), GTK_SORT_ASCENDING, on_sort_type, self);
-  gtk_action_group_add_radio_actions(act_grp, main_win_sort_by_actions, G_N_ELEMENTS(main_win_sort_by_actions), 0, on_sort_by, self);
+  gtk_action_group_add_toggle_actions(act_grp, main_win_toggle_actions, 
+    G_N_ELEMENTS(main_win_toggle_actions), self);
+  gtk_action_group_add_radio_actions(act_grp, main_win_mode_actions, 
+    G_N_ELEMENTS(main_win_mode_actions), FM_FV_ICON_VIEW, on_change_mode, self);
+  gtk_action_group_add_radio_actions(act_grp, main_win_sort_type_actions, 
+    G_N_ELEMENTS(main_win_sort_type_actions), GTK_SORT_ASCENDING, on_sort_type, self);
+  gtk_action_group_add_radio_actions(act_grp, main_win_sort_by_actions, 
+    G_N_ELEMENTS(main_win_sort_by_actions), 0, on_sort_by, self);
   
   accel_grp = gtk_ui_manager_get_accel_group(ui);
   gtk_window_add_accel_group(GTK_WINDOW(self), accel_grp);
@@ -123,7 +127,7 @@ fm_main_win_init(HakoWindow *self)
 void 
 fm_main_win_finalize(GObject *object)
 {
-  HakoWindow *self;
+  TcSmartWindow *self;
   
   g_return_if_fail(object != NULL);
   g_return_if_fail(IS_FM_MAIN_WIN(object));
@@ -147,7 +151,7 @@ fm_main_win_finalize(GObject *object)
 }
 
 void 
-fm_main_win_class_init(HakoWindowClass *klass)
+fm_main_win_class_init(TcSmartWindowClass *klass)
 {
   GObjectClass *g_object_class;
   g_object_class = G_OBJECT_CLASS(klass);
@@ -156,7 +160,7 @@ fm_main_win_class_init(HakoWindowClass *klass)
 }
 
 void 
-fm_main_win_chdir_by_name(HakoWindow* win, const char* path_str)
+fm_main_win_chdir_by_name(TcSmartWindow* win, const char* path_str)
 {
   FmPath* path;
   char* tmp;
@@ -169,13 +173,13 @@ fm_main_win_chdir_by_name(HakoWindow* win, const char* path_str)
 }
 
 void 
-fm_main_win_chdir_without_history(HakoWindow* win, FmPath* path)
+fm_main_win_chdir_without_history(TcSmartWindow* win, FmPath* path)
 {
   fm_folder_view_chdir(FM_FOLDER_VIEW(win->folder_view), path);
 }
 
 void 
-fm_main_win_chdir(HakoWindow* win, FmPath* path)
+fm_main_win_chdir(TcSmartWindow* win, FmPath* path)
 {
   int scroll_pos = gtk_adjustment_get_value(gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(win->folder_view)));
   char * str = fm_path_to_str(path);

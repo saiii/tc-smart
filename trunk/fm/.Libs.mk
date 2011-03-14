@@ -16,9 +16,9 @@
 ##=============================================================================
 
 LIBS  =
-#LIBS += /home/athip/Dev/pcmanfm/fm/libfm/BIN/lib/libfm-gtk.a 
-#LIBS += /home/athip/Dev/pcmanfm/fm/libfm/BIN/lib/libfm.a 
-#LIBS += /home/athip/Dev/pcmanfm/fm/libfm/DEP/menu-cache-0.3.2/BIN/lib/libmenu-cache.a 
+#LIBS += /home/athip/Dev/pcmanfm/fm/libfm.orig/libfm/BIN/lib/libfm-gtk.so
+#LIBS += /home/athip/Dev/pcmanfm/fm/libfm.orig/libfm/BIN/lib/libfm.so
+#LIBS += /home/athip/Dev/pcmanfm/fm/libfm/DEP/menu-cache-0.3.2/BIN/lib/libmenu-cache.so
 LIBS += /home/athip/Dev/pcmanfm/fm/libfm.orig/libfm/BIN/lib/libfm-gtk.a 
 LIBS += /home/athip/Dev/pcmanfm/fm/libfm.orig/libfm/BIN/lib/libfm.a 
 LIBS += /home/athip/Dev/pcmanfm/fm/libfm/DEP/menu-cache-0.3.2/BIN/lib/libmenu-cache.a 
