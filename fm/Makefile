@@ -17,7 +17,7 @@
 
 CC   = gcc
 OPTS = -g -Wall -O3
-DEF  =
+DEF  = 
 include .Include.mk
 include .Libs.mk
 

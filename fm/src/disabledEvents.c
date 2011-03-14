@@ -22,47 +22,47 @@
 #include "main.h"
 
 void 
-on_cut(GtkAction* act, HakoWindow* win)
+on_cut(GtkAction* act, TcSmartWindow* win)
 {
 }
 
 void 
-on_copy(GtkAction* act, HakoWindow* win)
+on_copy(GtkAction* act, TcSmartWindow* win)
 {
 }
 
 void 
-on_copy_to(GtkAction* act, HakoWindow* win)
+on_copy_to(GtkAction* act, TcSmartWindow* win)
 {
 }
 
 void 
-on_move_to(GtkAction* act, HakoWindow* win)
+on_move_to(GtkAction* act, TcSmartWindow* win)
 {
 }
 
 void 
-on_paste(GtkAction* act, HakoWindow* win)
+on_paste(GtkAction* act, TcSmartWindow* win)
 {
 }
 
 void 
-on_del(GtkAction* act, HakoWindow* win)
+on_del(GtkAction* act, TcSmartWindow* win)
 {
 }
 
 void 
-on_rename(GtkAction* act, HakoWindow* win)
+on_rename(GtkAction* act, TcSmartWindow* win)
 {
 }
 
 void 
-on_create_new(GtkAction* action, HakoWindow* win)
+on_create_new(GtkAction* action, TcSmartWindow* win)
 {
 }
 
 void 
-on_prop(GtkAction* action, HakoWindow* win)
+on_prop(GtkAction* action, TcSmartWindow* win)
 {
 }
 

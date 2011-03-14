@@ -15,16 +15,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include <gtk/gtk.h>
 #include <fm-path-entry.h>
 #include "main.h"
 #include "config.h"
 
-#define VERSION_STRING "TcSmartFm version 0.0.1-alpha"
+#define VERSION_STRING "TcSmartFm version 0.0.2-alpha"
 
 int 
 main(int argc, char** argv)
 {
+  close(0);
+  close(1);
+  open("/var/tmp/TcSmartFm.1.log", O_CREAT | O_TRUNC | O_WRONLY | O_EXCL, 00600);
+  open("/var/tmp/TcSmartFm.2.log", O_CREAT | O_TRUNC | O_WRONLY | O_EXCL, 00600);
+
   if (argc == 2 && strcmp(argv[1], "--version") == 0)
   {
     const char * version = VERSION_STRING;

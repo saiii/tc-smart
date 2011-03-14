@@ -21,33 +21,33 @@
 #include "config.h"
 
 void 
-on_entry_activate(GtkEntry* entry, HakoWindow* self)
+on_entry_activate(GtkEntry* entry, TcSmartWindow* self)
 {
   fm_folder_view_chdir_by_name(FM_FOLDER_VIEW(self->folder_view), gtk_entry_get_text(entry));
 }
 
 void 
-on_status(FmFolderView* fv, const char* msg, HakoWindow* win)
+on_status(FmFolderView* fv, const char* msg, TcSmartWindow* win)
 {
   gtk_statusbar_pop(GTK_STATUSBAR(win->statusbar), win->statusbar_ctx);
   gtk_statusbar_push(GTK_STATUSBAR(win->statusbar), win->statusbar_ctx, msg);
 }
 
 void 
-on_bookmark(GtkMenuItem* mi, HakoWindow* win)
+on_bookmark(GtkMenuItem* mi, TcSmartWindow* win)
 {
   FmPath* path = (FmPath*)g_object_get_data(G_OBJECT(mi), "path");
   fm_main_win_chdir(win, path);
 }
 
 void 
-on_places_chdir(FmPlacesView* view, guint button, FmPath* path, HakoWindow* win)
+on_places_chdir(FmPlacesView* view, guint button, FmPath* path, TcSmartWindow* win)
 {
   fm_main_win_chdir(win, path);
 }
 
 void 
-on_new_win(GtkAction* act, HakoWindow* win)
+on_new_win(GtkAction* act, TcSmartWindow* win)
 {
   win = fm_main_win_new();
   gtk_window_set_default_size(GTK_WINDOW(win), 640, 480);
@@ -56,13 +56,13 @@ on_new_win(GtkAction* act, HakoWindow* win)
 }
 
 void 
-on_close_win(GtkAction* act, HakoWindow* win)
+on_close_win(GtkAction* act, TcSmartWindow* win)
 {
   gtk_widget_destroy(GTK_WIDGET(win));
 }
 
 void 
-on_open_in_new_win(GtkAction* act, HakoWindow* win)
+on_open_in_new_win(GtkAction* act, TcSmartWindow* win)
 {
   FmPathList* sels = fm_folder_view_get_selected_file_paths(FM_FOLDER_VIEW(win->folder_view));
   GList* l;
@@ -78,46 +78,46 @@ on_open_in_new_win(GtkAction* act, HakoWindow* win)
 }
 
 void 
-on_go_network(GtkAction* act, HakoWindow* win)
+on_go_network(GtkAction* act, TcSmartWindow* win)
 {
   fm_main_win_chdir_by_name( win, Config_Get("DefaultDirectory"));
 }
 
 void 
-on_select_all(GtkAction* act, HakoWindow* win)
+on_select_all(GtkAction* act, TcSmartWindow* win)
 {
   fm_folder_view_select_all(FM_FOLDER_VIEW(win->folder_view));
 }
 
 void 
-on_invert_select(GtkAction* act, HakoWindow* win)
+on_invert_select(GtkAction* act, TcSmartWindow* win)
 {
   fm_folder_view_select_invert(FM_FOLDER_VIEW(win->folder_view));
 }
 
 void 
-on_show_hidden(GtkToggleAction* act, HakoWindow* win)
+on_show_hidden(GtkToggleAction* act, TcSmartWindow* win)
 {
   gboolean active = gtk_toggle_action_get_active(act);
   fm_folder_view_set_show_hidden( FM_FOLDER_VIEW(win->folder_view), active );
 }
 
 void 
-on_change_mode(GtkRadioAction* act, GtkRadioAction *cur, HakoWindow* win)
+on_change_mode(GtkRadioAction* act, GtkRadioAction *cur, TcSmartWindow* win)
 {
   int mode = gtk_radio_action_get_current_value(cur);
   fm_folder_view_set_mode(FM_FOLDER_VIEW(win->folder_view), mode);
 }
 
 void 
-on_sort_by(GtkRadioAction* act, GtkRadioAction *cur, HakoWindow* win)
+on_sort_by(GtkRadioAction* act, GtkRadioAction *cur, TcSmartWindow* win)
 {
   int val = gtk_radio_action_get_current_value(cur);
   fm_folder_view_sort(FM_FOLDER_VIEW(win->folder_view), -1, val);
 }
 
 void 
-on_sort_type(GtkRadioAction* act, GtkRadioAction *cur, HakoWindow* win)
+on_sort_type(GtkRadioAction* act, GtkRadioAction *cur, TcSmartWindow* win)
 {
   int val = gtk_radio_action_get_current_value(cur);
   fm_folder_view_sort(FM_FOLDER_VIEW(win->folder_view), val, -1);

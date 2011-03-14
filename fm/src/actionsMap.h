@@ -23,30 +23,30 @@
 
 #include <glib/gi18n.h>
 
-extern void on_new_win(GtkAction* act, HakoWindow* win);
-extern void on_close_win(GtkAction* act, HakoWindow* win);
-extern void on_open_in_new_win(GtkAction* act, HakoWindow* win);
+extern void on_new_win(GtkAction* act, TcSmartWindow* win);
+extern void on_close_win(GtkAction* act, TcSmartWindow* win);
+extern void on_open_in_new_win(GtkAction* act, TcSmartWindow* win);
 
-extern void on_go_back(GtkAction* act, HakoWindow* win);
-extern void on_go_forward(GtkAction* act, HakoWindow* win);
-extern void on_go_network(GtkAction* act, HakoWindow* win);
+extern void on_go_back(GtkAction* act, TcSmartWindow* win);
+extern void on_go_forward(GtkAction* act, TcSmartWindow* win);
+extern void on_go_network(GtkAction* act, TcSmartWindow* win);
 
-extern void on_select_all(GtkAction* act, HakoWindow* win);
-extern void on_invert_select(GtkAction* act, HakoWindow* win);
-extern void on_show_hidden(GtkToggleAction* act, HakoWindow* win);
-extern void on_change_mode(GtkRadioAction* act, GtkRadioAction *cur, HakoWindow* win);
-extern void on_sort_by(GtkRadioAction* act, GtkRadioAction *cur, HakoWindow* win);
-extern void on_sort_type(GtkRadioAction* act, GtkRadioAction *cur, HakoWindow* win);
+extern void on_select_all(GtkAction* act, TcSmartWindow* win);
+extern void on_invert_select(GtkAction* act, TcSmartWindow* win);
+extern void on_show_hidden(GtkToggleAction* act, TcSmartWindow* win);
+extern void on_change_mode(GtkRadioAction* act, GtkRadioAction *cur, TcSmartWindow* win);
+extern void on_sort_by(GtkRadioAction* act, GtkRadioAction *cur, TcSmartWindow* win);
+extern void on_sort_type(GtkRadioAction* act, GtkRadioAction *cur, TcSmartWindow* win);
 
-extern void on_cut(GtkAction* act, HakoWindow* win);
-extern void on_copy(GtkAction* act, HakoWindow* win);
-extern void on_copy_to(GtkAction* act, HakoWindow* win);
-extern void on_move_to(GtkAction* act, HakoWindow* win);
-extern void on_paste(GtkAction* act, HakoWindow* win);
-extern void on_del(GtkAction* act, HakoWindow* win);
-extern void on_rename(GtkAction* act, HakoWindow* win);
-extern void on_create_new(GtkAction* action, HakoWindow* win);
-extern void on_prop(GtkAction* action, HakoWindow* win);
+extern void on_cut(GtkAction* act, TcSmartWindow* win);
+extern void on_copy(GtkAction* act, TcSmartWindow* win);
+extern void on_copy_to(GtkAction* act, TcSmartWindow* win);
+extern void on_move_to(GtkAction* act, TcSmartWindow* win);
+extern void on_paste(GtkAction* act, TcSmartWindow* win);
+extern void on_del(GtkAction* act, TcSmartWindow* win);
+extern void on_rename(GtkAction* act, TcSmartWindow* win);
+extern void on_create_new(GtkAction* action, TcSmartWindow* win);
+extern void on_prop(GtkAction* action, TcSmartWindow* win);
 
 static const char main_menu_xml[] = 
 "<menubar>"

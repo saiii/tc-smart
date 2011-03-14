@@ -22,12 +22,12 @@
 #include "navstack.h"
 
 #define FM_MAIN_WIN_TYPE             (fm_main_win_get_type())
-#define FM_MAIN_WIN(obj)             (G_TYPE_CHECK_INSTANCE_CAST((obj), FM_MAIN_WIN_TYPE, HakoWindow))
-#define FM_MAIN_WIN_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST((klass), FM_MAIN_WIN_TYPE, HakoWindowClass))
+#define FM_MAIN_WIN(obj)             (G_TYPE_CHECK_INSTANCE_CAST((obj), FM_MAIN_WIN_TYPE, TcSmartWindow))
+#define FM_MAIN_WIN_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST((klass), FM_MAIN_WIN_TYPE, TcSmartWindowClass))
 #define IS_FM_MAIN_WIN(obj)          (G_TYPE_CHECK_INSTANCE_TYPE((obj), FM_MAIN_WIN_TYPE))
 #define IS_FM_MAIN_WIN_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE((klass), FM_MAIN_WIN_TYPE))
 
-typedef struct _HakoWindow
+typedef struct _TcSmartWindow
 {
   GtkWindow     dummy;
   GtkUIManager* ui;
@@ -40,11 +40,11 @@ typedef struct _HakoWindow
   NavStack      nav_stack;
   guint         statusbar_ctx;
   guint         statusbar_ctx2;
-}HakoWindow;
+}TcSmartWindow;
 
-typedef struct _HakoWindowClass
+typedef struct _TcSmartWindowClass
 {
   GtkWindowClass parent_class;
-}HakoWindowClass;
+}TcSmartWindowClass;
 
 #endif

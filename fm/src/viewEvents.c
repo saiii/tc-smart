@@ -21,7 +21,7 @@
 extern gboolean open_folder_func(GAppLaunchContext* ctx, GList* folder_infos, gpointer user_data, GError** err);
 
 void
-on_file_clicked(FmFolderView* fv, FmFolderViewClickType type, FmFileInfo* fi, HakoWindow* win)
+on_file_clicked(FmFolderView* fv, FmFolderViewClickType type, FmFileInfo* fi, TcSmartWindow* win)
 {
   switch(type)
   {
@@ -76,7 +76,7 @@ on_file_clicked(FmFolderView* fv, FmFolderViewClickType type, FmFileInfo* fi, Ha
   }
 }
 
-void on_sel_changed(FmFolderView* fv, FmFileInfoList* files, HakoWindow* win)
+void on_sel_changed(FmFolderView* fv, FmFileInfoList* files, TcSmartWindow* win)
 {
   /* popup previous message if there is any */
   gtk_statusbar_pop(GTK_STATUSBAR(win->statusbar), win->statusbar_ctx2);
