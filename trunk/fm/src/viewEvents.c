@@ -36,7 +36,7 @@ on_file_clicked(FmFolderView* fv, FmFolderViewClickType type, FmFileInfo* fi, Ha
       {
         fm_main_win_chdir(win, fi->path);
       }
-#if 0
+#if 1
       else if(fi->target) 
       {
         fm_main_win_chdir_by_name( win, fi->target);

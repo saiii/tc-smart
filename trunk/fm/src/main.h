@@ -32,7 +32,6 @@ typedef struct _HakoWindow
   GtkWindow     dummy;
   GtkUIManager* ui;
   GtkWidget*    toolbar;
-  GtkWidget*    location;
   GtkWidget*    hpaned;
   GtkWidget*    folder_view;
   GtkWidget*    statusbar;

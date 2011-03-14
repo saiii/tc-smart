@@ -56,7 +56,7 @@ fm_main_win_init(HakoWindow *self)
   
   self->hpaned = gtk_hpaned_new();
   gtk_paned_set_position(GTK_PANED(self->hpaned), 150);
-  
+
   /* folder view */
   self->folder_view = fm_folder_view_new( FM_FV_ICON_VIEW );
   fm_folder_view_set_show_hidden(FM_FOLDER_VIEW(self->folder_view), FALSE);
@@ -81,7 +81,7 @@ fm_main_win_init(HakoWindow *self)
   gtk_window_add_accel_group(GTK_WINDOW(self), accel_grp);
   gtk_ui_manager_insert_action_group(ui, act_grp, 0);
   gtk_ui_manager_add_ui_from_string(ui, main_menu_xml, -1, NULL);
-  
+
   self->toolbar = gtk_ui_manager_get_widget(ui, "/toolbar"); 
   gtk_toolbar_set_icon_size(GTK_TOOLBAR(self->toolbar), GTK_ICON_SIZE_LARGE_TOOLBAR);
   gtk_toolbar_set_style(GTK_TOOLBAR(self->toolbar), GTK_TOOLBAR_ICONS);
@@ -90,7 +90,7 @@ fm_main_win_init(HakoWindow *self)
   toolitem = g_object_new(GTK_TYPE_MENU_TOOL_BUTTON, NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(self->toolbar), toolitem, 2);
   gtk_widget_show(GTK_WIDGET(toolitem));
-  act = gtk_ui_manager_get_action(ui, "/menubar/GoMenu/Next");
+  act = gtk_ui_manager_get_action(ui, "/menubar/GoMenu/Next"); 
   gtk_activatable_set_related_action(GTK_ACTIVATABLE(toolitem), act);
   
   /* set up history menu */
@@ -98,9 +98,6 @@ fm_main_win_init(HakoWindow *self)
   
   gtk_box_pack_start((GtkBox*)vbox, self->toolbar, FALSE, TRUE, 0);
   
-  /* the location bar */
-  self->location = fm_path_entry_new();
-  g_signal_connect(self->location, "activate", on_entry_activate, self);
   g_signal_connect(self->folder_view, "loaded", G_CALLBACK(on_view_loaded), (gpointer) self);
   
   gtk_box_pack_start((GtkBox*)vbox, self->hpaned, TRUE, TRUE, 0);
@@ -166,7 +163,6 @@ fm_main_win_chdir_by_name(HakoWindow* win, const char* path_str)
   path = fm_path_new_for_str(path_str);
   fm_folder_view_chdir(FM_FOLDER_VIEW(win->folder_view), path);
   tmp = fm_path_display_name(path, FALSE);
-  gtk_entry_set_text(GTK_ENTRY(win->location), tmp);
   g_free(tmp);
   fm_path_unref(path);
   NavStack_push(win->nav_stack, path_str, 0);
