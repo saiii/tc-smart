@@ -164,7 +164,7 @@ fm_main_win_chdir_by_name(TcSmartWindow* win, const char* path_str)
 {
   FmPath* path;
   char* tmp;
-  path = fm_path_new_for_str(path_str);
+  path = fm_path_new(path_str);
   fm_folder_view_chdir(FM_FOLDER_VIEW(win->folder_view), path);
   tmp = fm_path_display_name(path, FALSE);
   g_free(tmp);
