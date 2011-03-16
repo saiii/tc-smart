@@ -24,7 +24,7 @@
 #include "main.h"
 #include "config.h"
 
-#define VERSION_STRING "TcSmartFm version 0.0.2-alpha"
+#define VERSION_STRING "TcSmartFm version 0.0.3-alpha"
 
 int 
 main(int argc, char** argv)

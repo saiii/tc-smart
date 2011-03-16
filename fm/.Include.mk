@@ -26,5 +26,5 @@ INC += -I/usr/include/gdk-pixbuf-2.0
 INC += -I/usr/include/atk-1.0
 INC += -I/usr/include/libxml2
 #INC += -I/home/athip/Dev/pcmanfm/fm/libfm.orig/BIN/include/libfm/libfm
-INC += -I/home/athip/Dev/pcmanfm/fm/libfm.orig/libfm/BIN/include/libfm/libfm
+INC += -I/home/athip/Dev/pcmanfm/old_version/libfm-0.1.12/BIN/include/libfm/libfm
 
