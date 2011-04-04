@@ -15,17 +15,27 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
-#ifndef __TCSMART_VS_MESSAGE__
-#define __TCSMART_VS_MESSAGE__
+#ifndef __TCSMART_SERVER_EVENTNOTIFIER__
+#define __TCSMART_SERVER_EVENTNOTIFIER__
 
-// Server to client
-#define TCSM_VS_START       100
-#define TCSM_VS_SHUTDOWN    101
+#include <string>
+#include <net/DataBus.h>
 
-// Client to server
-#define TCSM_VS_CLIENT_MSG  300
+class ClientMsgHandler;
+class DefaultMsgHandler;
+class EventNotifier
+{
+private:
+  ClientMsgHandler                *_clientMsg;
+  DefaultMsgHandler               *_defaultMsg;
+  sai::net::McastDataBusChannel   *_channel;
 
-#define TCSM_VS_CLIENT_MESSAGE "<TCSM<CLIENT>>"
-#define TCSM_VS_SERVER_MESSAGE "<TCSM<SERVER>>"
+public:
+  EventNotifier();
+  ~EventNotifier();
+
+  void start(std::string);
+  void shutdown();
+};
 
 #endif

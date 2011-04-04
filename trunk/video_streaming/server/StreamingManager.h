@@ -15,17 +15,49 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
-#ifndef __TCSMART_VS_MESSAGE__
-#define __TCSMART_VS_MESSAGE__
+#ifndef __TCSMART_SERVER_STREAMINGMANAGER__
+#define __TCSMART_SERVER_STREAMINGMANAGER__
 
-// Server to client
-#define TCSM_VS_START       100
-#define TCSM_VS_SHUTDOWN    101
+#include <string>
+#include <net/TimerTask.h>
+#include <EventNotifier.h>
+#include <vlc/vlc.h>
 
-// Client to server
-#define TCSM_VS_CLIENT_MSG  300
+typedef enum
+{
+  NONE,
+  START,
+  PLAYING,
+  PAUSE,
+  SHUTDOWN
+}StreamState;
 
-#define TCSM_VS_CLIENT_MESSAGE "<TCSM<CLIENT>>"
-#define TCSM_VS_SERVER_MESSAGE "<TCSM<SERVER>>"
+class VlcPlayer
+{
+  public:
+    libvlc_instance_t *     instance;
+    libvlc_media_player_t * player;
+
+  public:
+    VlcPlayer();
+    ~VlcPlayer();
+};
+
+
+class StreamingManager : public sai::net::TimerTask
+{
+private:
+  EventNotifier * _event;
+  StreamState     _state;
+  std::string     _transcode;
+  VlcPlayer       _player;
+
+public:
+  StreamingManager();
+  ~StreamingManager();
+
+  void start(std::string);
+  void timerEvent();
+};
 
 #endif
