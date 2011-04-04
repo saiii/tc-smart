@@ -15,14 +15,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
+#include <net/Net.h>
+
+#include <StreamingManager.h>
+
 int main(int argc, char * argv[])
 {
-  // Launch GUI
-  // Read file
-  // Find the best transcode
-  // Send start and transcode
-  // Wait a moment to make sure everyone is ready
-  // Start streaming
-  // When program terminate sends shutdown
+  // TODO Launch GUI
+  // TODO Read file
+
+  StreamingManager mgr;
+  mgr.start(argv[1]);
+
+  sai::net::Net::GetInstance()->mainLoop();
   return 0;
 }
