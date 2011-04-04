@@ -15,33 +15,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
-#include <stdio.h>
-#include <unistd.h>
+#ifndef __TCSMART_VS_MESSAGE__
+#define __TCSMART_VS_MESSAGE__
 
-#include "OneInstance.h"
-#include "Daemonizer.h"
-#include "Command.h"
+#define TCSM_VS_START       1
+#define TCSM_VS_SHUTDOWN    2
 
-int main(int argc, char* argv[])
-{
-  // Become a daemon
-  Daemonizer daemon;
-  if (!daemon.initialize())
-  {
-    return 0;
-  }
+#define TCSM_VS_CLIENT_MESSAGE "<TCSM<CLIENT>>"
+#define TCSM_VS_SERVER_MESSAGE "<TCSM<SERVER>>"
 
-  // Make sure there is no other instance of the program running
-  OneInstance one;
-  if (one.check() == EXIT_NEEDED)
-  {
-    printf("only one instance at a time\n");
-    return 1;
-  }
-
-  chdir("/usr/share/tc-smart/");
-
-  Command command;
-  command.initialize();
-  return 0;
-}
+#endif

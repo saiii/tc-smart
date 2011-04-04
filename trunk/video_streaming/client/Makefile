@@ -24,9 +24,10 @@ include .Libs.mk
 
 TCSMART_SRC = Main.cpp \
               OneInstance.cpp \
-              Daemonizer.cpp
+              Daemonizer.cpp \
+              Command.cpp
 
-TCSMART_VDOCLIENT = tc-smart-vdo-client
+TCSMART_VDOCLIENT = tc_smart_vdo_client
 
 TCSMART_OBJ1= $(TCSMART_SRC:.cpp=.o)
 TCSMART_OBJ = $(addprefix ., $(TCSMART_OBJ1))
@@ -35,7 +36,7 @@ TCSMART_ASM = $(TCSMART_OBJ:.o=.asm)
 
 all: $(TCSMART_VDOCLIENT)
 
-tc-smart-vdo-client: $(TCSMART_OBJ) 
+tc_smart_vdo_client: $(TCSMART_OBJ) 
 	$(CC) -o $@ $(OPTS) $(TCSMART_OBJ) $(LIBS)
 
 .%.o: %.cpp
@@ -48,7 +49,7 @@ tc-smart-vdo-client: $(TCSMART_OBJ)
                 rm -f $@.d
 
 clean:
-	@ rm -f .*.o .*.d tc-smart-vdo-client
+	@ rm -f .*.o .*.d tc_smart_vdo_client
 
 include $(TCSMART_DEP)
 

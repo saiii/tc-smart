@@ -46,8 +46,8 @@ OneInstance::check()
   atexit(OneInstance::onExit);
   signal(SIGHUP,  OneInstance::onSignal); 
   signal(SIGINT,  OneInstance::onSignal); 
-  signal(SIGQUIT, OneInstance::onSignal); 
-  signal(SIGTRAP, OneInstance::onSignal); 
+  //signal(SIGQUIT, OneInstance::onSignal); 
+  //signal(SIGTRAP, OneInstance::onSignal); 
   signal(SIGKILL, OneInstance::onSignal); 
   signal(SIGTERM, OneInstance::onSignal); 
 

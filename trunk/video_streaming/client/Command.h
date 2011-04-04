@@ -15,33 +15,38 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
-#include <stdio.h>
-#include <unistd.h>
+#ifndef __TCSMART_VSCLIENT_COMMAND__
+#define __TCSMART_VSCLIENT_COMMAND__
 
-#include "OneInstance.h"
-#include "Daemonizer.h"
-#include "Command.h"
+#include <vlc/vlc.h>
+#include <string>
 
-int main(int argc, char* argv[])
+class Command 
 {
-  // Become a daemon
-  Daemonizer daemon;
-  if (!daemon.initialize())
+private:
+  class Vlc
   {
-    return 0;
-  }
+    public:
+      libvlc_instance_t *     instance;
+      libvlc_media_player_t * player;
 
-  // Make sure there is no other instance of the program running
-  OneInstance one;
-  if (one.check() == EXIT_NEEDED)
-  {
-    printf("only one instance at a time\n");
-    return 1;
-  }
+    public:
+      Vlc();
+      ~Vlc();
+  };
 
-  chdir("/usr/share/tc-smart/");
+private:
+  Vlc _vlc;
 
-  Command command;
-  command.initialize();
-  return 0;
-}
+public:
+  Command();
+  ~Command();
+
+  void initialize();
+
+  // Events from server
+  void start(std::string);
+  void shutdown();
+};
+
+#endif

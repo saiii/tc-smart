@@ -15,5 +15,7 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##=============================================================================
 
-LIBS  = 
-
+LIBS  = -L/home/athip/Dev/boost_1_46_1/BIN/lib -lboost_system
+LIBS += -L/home/athip/Dev/sai/makes/gnu -lSai
+LIBS += -lvlc
+LIBS += -lcrypto++
