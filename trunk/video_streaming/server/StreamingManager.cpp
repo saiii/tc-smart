@@ -38,9 +38,9 @@ StreamingManager::start(std::string fileName)
     return;
   }
 
-  // Detect video + audio encoding information
-  // Find the best transcode
-
+  // TODO Detect video + audio encoding information
+  // TODO Find the best transcode
+  _transcode = "#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=44100}:rtp{dst=224.1.1.1,port=5004,mux=ts}";
   _event->start(_transcode);
 
   _state = START;
@@ -66,6 +66,7 @@ StreamingManager::timerEvent()
         media       = libvlc_media_new_path(_player.instance, _transcode.c_str());
         _player.player = libvlc_media_player_new_from_media(media);
 
+        // TODO : How integrate the vlc to our custom wxWidget
         //libvlc_set_fullscreen(_player.player, 1);
         libvlc_media_release(media);
 
