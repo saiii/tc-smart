@@ -22,7 +22,9 @@ DEF  =
 include .Include.mk
 include .Libs.mk
 
-TCSMART_SRC = Main.cpp
+TCSMART_SRC = Main.cpp \
+              StreamingManager.cpp \
+              EventNotifier.cpp
 
 TCSMART_VDOCLIENT = tc_smart_vdo_server
 

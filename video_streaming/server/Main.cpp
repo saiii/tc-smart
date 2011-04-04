@@ -17,5 +17,12 @@
 
 int main(int argc, char * argv[])
 {
+  // Launch GUI
+  // Read file
+  // Find the best transcode
+  // Send start and transcode
+  // Wait a moment to make sure everyone is ready
+  // Start streaming
+  // When program terminate sends shutdown
   return 0;
 }
