@@ -36,7 +36,7 @@ private:
   };
 
 private:
-  Vlc _vlc;
+  Vlc* _vlc;
 
 public:
   Command();
