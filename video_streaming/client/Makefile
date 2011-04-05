@@ -27,7 +27,7 @@ TCSMART_SRC = Main.cpp \
               Daemonizer.cpp \
               Command.cpp
 
-TCSMART_VDOCLIENT = tc_smart_vdo_client
+TCSMART_VDOCLIENT = tc_smart_vdo_client tc_smart_vdo_client_killer
 
 TCSMART_OBJ1= $(TCSMART_SRC:.cpp=.o)
 TCSMART_OBJ = $(addprefix ., $(TCSMART_OBJ1))
@@ -38,6 +38,9 @@ all: $(TCSMART_VDOCLIENT)
 
 tc_smart_vdo_client: $(TCSMART_OBJ) 
 	$(CC) -o $@ $(OPTS) $(TCSMART_OBJ) $(LIBS)
+
+tc_smart_vdo_client_killer: .Killer.o
+	$(CC) -o $@ $(OPTS) $< $(LIBS)
 
 .%.o: %.cpp
 	$(CC) -o $@ $(OPTS) $(DEF) $(INC) -c $<
