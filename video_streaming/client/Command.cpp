@@ -70,12 +70,14 @@ public:
 
 using namespace sai::net;
 
-Command::Command()
+Command::Command():
+  _vlc(0)
 {
 }
 
 Command::~Command()
 {
+  delete _vlc;
 }
 
 void 
@@ -142,6 +144,15 @@ Command::initialize()
   // get shutdown command from server and turn off the window
 
   bus->activate();
+
+  _vlc = new Vlc();
+  libvlc_media_t* media = 0;
+  media        = libvlc_media_new_path(_vlc->instance, "rtp://@224.1.1.1:5004");
+  _vlc->player = libvlc_media_player_new_from_media(media);
+  libvlc_set_fullscreen(_vlc->player, 1);
+  libvlc_media_release(media);
+  libvlc_media_player_play(_vlc->player);
+
   Net::GetInstance()->mainLoop();
   exit(0);
 }
@@ -149,29 +160,24 @@ Command::initialize()
 void 
 Command::start(std::string msg)
 {
-  if (_vlc.player)
+#if 0
+  if (_vlc->player)
   {
     shutdown();
   }
+#endif
 
-  libvlc_media_t* media = 0;
-  media       = libvlc_media_new_path(_vlc.instance, msg.c_str());
-  _vlc.player = libvlc_media_player_new_from_media(media);
-
-  libvlc_set_fullscreen(_vlc.player, 1);
-  libvlc_media_release(media);
-
-  libvlc_media_player_play(_vlc.player);
+  printf("Get start command at addr = %s\n", msg.c_str());
 }
 
 void 
 Command::shutdown()
 {
-  if (_vlc.player)
+  if (_vlc->player)
   {
-    libvlc_media_player_stop(_vlc.player);
-    libvlc_media_player_release(_vlc.player);
-    _vlc.player = 0;
+    libvlc_media_player_stop(_vlc->player);
+    libvlc_media_player_release(_vlc->player);
+    _vlc->player = 0;
   }
 }
 

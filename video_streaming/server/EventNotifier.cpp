@@ -61,6 +61,7 @@ EventNotifier::EventNotifier():
   bus->registerHandler(TCSM_VS_CLIENT_MSG, _clientMsg);
 
   bus->listen(TCSM_VS_CLIENT_MESSAGE);
+  bus->activate();
 }
 
 EventNotifier::~EventNotifier()
