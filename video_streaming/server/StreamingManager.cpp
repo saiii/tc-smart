@@ -62,6 +62,7 @@ StreamingManager::timerEvent()
       break;
     case START:
 #if 0
+      try -> libvlc_media_player_set_xwindow
       if (_player.player)
       {
         libvlc_media_player_stop(_player.player);

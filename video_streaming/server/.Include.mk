@@ -19,3 +19,5 @@ INC += -I.
 INC += -I..
 INC += -I/home/athip/Dev/sai/src
 INC += -I/home/athip/Dev/boost_1_46_1/BIN/include
+INC += -I/home/athip/Dev/wxWidgets/wxWidgets-2.9.1/BIN/lib/wx/include/gtk2-unicode-2.9 
+INC += -I/home/athip/Dev/wxWidgets/wxWidgets-2.9.1/BIN/include/wx-2.9
