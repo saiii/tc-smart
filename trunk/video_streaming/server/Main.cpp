@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
+#include <unistd.h>
 #include <net/Net.h>
 #include <StreamingManager.h>
 #include <Main.h>
@@ -33,10 +34,6 @@ TcsVdoServer::OnInit()
   MainWindow * window = new MainWindow(wxT("tc-smart"));
   window->Show(true);
 
-  // TODO
-  //StreamingManager mgr;
-  //mgr.start(argv[1]);
-
   sai::net::Net::GetInstance()->mainLoop();
   return true;
 }
@@ -45,11 +42,13 @@ TcsVdoServer::OnInit()
 
 MainWindow::MainWindow(const wxString& title):
   wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(800, 500)),
+  _mgr(0),
   _drop(0),
-  _menu(0)//,
-  //_txtFile(0)
+  _menu(0),
+  _mainPanel(0),
+  _position(0)
 {
-  Center();
+  _mgr = new StreamingManager();
 
   _drop = new TextDrop(this);
   SetDropTarget(_drop);
@@ -60,14 +59,39 @@ MainWindow::MainWindow(const wxString& title):
   Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnAbout));
   Connect(wxID_OPEN,  wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnOpen));
 
-  //_txtFile = new wxTextCtrl(this, -1, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_MULTILINE);
-
   CreateStatusBar();    
   SetStatusText(wxT("Ready"));
+
+  wxColour c1(0xcc, 0x44, 0x00, 0x50);
+
+  _mainPanel = new wxPanel(this, -1);
+  _mainPanel->SetBackgroundColour(c1);
+
+  wxBoxSizer *vbox  = new wxBoxSizer(wxVERTICAL);
+  wxBoxSizer *hbox1 = new wxBoxSizer(wxHORIZONTAL);
+  wxBoxSizer *hbox2 = new wxBoxSizer(wxHORIZONTAL);
+
+  hbox1->Add(new wxPanel(_mainPanel, wxID_ANY), 0, 0, 0);
+
+  _position = new wxSlider(_mainPanel, wxID_ANY, 0, 0, 10000); 
+
+  wxButton * play   = new wxButton(_mainPanel, -1, wxT("Play"));
+  wxButton * stop   = new wxButton(_mainPanel, -1, wxT("Stop"));
+
+  hbox2->Add(_position, 8, 0, 0);
+  hbox2->Add(stop, 0, 0, 0);
+  hbox2->Add(play, 0, 0, 0);
+
+  vbox->Add(hbox1, 1, wxEXPAND, 0);
+  vbox->Add(hbox2, 0, wxEXPAND, 0);
+  _mainPanel->SetSizer(vbox);
+
+  Center();
 }
 
 MainWindow::~MainWindow()
 {
+  delete _mgr;
 }
 
 void 
@@ -91,7 +115,13 @@ MainWindow::OnOpen(wxCommandEvent& event)
   if (dialog->ShowModal() == wxID_OK)
   {
     wxString fileName = dialog->GetPath();
-    SetStatusText(fileName);
+
+    if (access(fileName.c_str(), R_OK) == 0)
+    {
+      SetStatusText(fileName);
+      //std::string name = std::string(fileName.mb_str());
+      //_mgr->start(name);
+    }
   }
 }
 
@@ -107,11 +137,7 @@ MainWindow::TextDrop::~TextDrop()
 bool 
 MainWindow::TextDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data)
 {
-  char * buff = new char[data.Len() + 10];
-  memset(buff, 0, data.Len() + 10);
-  memcpy(buff, data.c_str(), data.Len());
-  printf("OnDropText %s\n", buff);
-  fflush(stdout);
+  //SetStatusText(data);
   return true;
 }
 
