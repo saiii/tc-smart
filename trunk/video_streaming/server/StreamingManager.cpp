@@ -46,7 +46,8 @@ StreamingManager::start(std::string fileName)
 
   // TODO Detect video + audio encoding information
   // TODO Find the best transcode
-  _transcode = "#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=44100}:rtp{dst=224.1.1.1,port=5004,mux=ts}";
+  _transcode = "#rtp{dst=224.1.1.1,port=5004,mux=ts}";
+  //_transcode = "#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=44100}:rtp{dst=224.1.1.1,port=5004,mux=ts}";
   _addr = "rtp://@224.1.1.1:5004";
 
   _state = START;
