@@ -22,6 +22,7 @@
 #include <wx/dnd.h>
 #include <wx/textdlg.h>
 
+class StreamingManager;
 class MainWindow : public wxFrame
 {
   private:
@@ -48,9 +49,11 @@ class MainWindow : public wxFrame
     };
 
   private:
-    TextDrop*   _drop;
-    Menu*       _menu;
-    //wxTextCtrl* _txtFile;
+    StreamingManager* _mgr;
+    TextDrop*         _drop;
+    Menu*             _menu;
+    wxPanel*          _mainPanel;
+    wxSlider*         _position;
 
   public:
     MainWindow(const wxString& title);
