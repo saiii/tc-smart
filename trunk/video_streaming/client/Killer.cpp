@@ -24,60 +24,37 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "OneInstance.h"
-
-int OneInstance::_segmentId = 0;
-
-OneInstance::OneInstance()
-{
-}
-
-OneInstance::~OneInstance()
-{
-}
-
-OneInstanceStatus 
-OneInstance::check()
+int main(int argc, char * argv[])
 {
   const int SIZE = 8;
 
-  _segmentId = shmget (0x2011, SIZE, IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR);
-  if (_segmentId < 0)
+  int segmentId = shmget (0x2011, SIZE, IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR);
+  if (segmentId >= 0)
   {
-    return EXIT_NEEDED;
+    // No such process
+    shmctl (segmentId, IPC_RMID, 0); 
+    return 1;
   }
 
-  char * mem = (char*) shmat(_segmentId, 0, 0);
-  pid_t pid = getpid();
-  uint64_t num = (uint64_t) pid;
-  memcpy(mem, &num, sizeof(num));
+  segmentId = shmget (0x2011, SIZE, IPC_CREAT | S_IRUSR | S_IWUSR);
+
+  char * mem = (char*) shmat(segmentId, 0, 0);
+  uint64_t num = 0;
+  memcpy(&num, mem, sizeof(num));
   shmdt(mem);
 
-  atexit(OneInstance::onExit);
-  signal(SIGHUP,  OneInstance::onSignal); 
-  signal(SIGINT,  OneInstance::onSignal); 
-  //signal(SIGQUIT, OneInstance::onSignal); 
-  //signal(SIGTRAP, OneInstance::onSignal); 
-  signal(SIGKILL, OneInstance::onSignal); 
-  signal(SIGTERM, OneInstance::onSignal); 
+  pid_t pid = (pid_t) num;
 
-  return GOOD_TO_GO;
-}
-
-void 
-OneInstance::onExit()
-{
-  if (_segmentId > 0)
+  if (kill(pid, SIGTERM) != 0)
   {
-    shmctl (_segmentId, IPC_RMID, 0); 
-    _segmentId = 0;
+    sleep (2);
+    kill(pid, SIGKILL);
   }
-}
 
-void 
-OneInstance::onSignal(int sig)
-{
-  onExit();
-  exit(0);
+  if (segmentId > 0)
+  {
+    shmctl (segmentId, IPC_RMID, 0); 
+    segmentId = 0;
+  }
+  return 0;
 }
-
