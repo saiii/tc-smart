@@ -52,7 +52,7 @@ tc_smart_vdo_client_killer: .Killer.o
                 rm -f $@.d
 
 clean:
-	@ rm -f .*.o .*.d tc_smart_vdo_client
+	@ rm -f .*.o .*.d tc_smart_vdo_client tc_smart_vdo_client_killer
 
 include $(TCSMART_DEP)
 
