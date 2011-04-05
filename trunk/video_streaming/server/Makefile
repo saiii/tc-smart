@@ -17,7 +17,7 @@
 
 CC   = g++
 OPTS = -g -Wall -O3 
-DEF  = 
+DEF  = -D_FILE_OFFSET_BITS=64 -DWXUSINGDLL -D__WXGTK__ -pthread
 
 include .Include.mk
 include .Libs.mk
