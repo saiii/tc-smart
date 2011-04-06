@@ -49,19 +49,22 @@ class MainWindow : public wxFrame
     };
 
   private:
-    StreamingManager* _mgr;
-    TextDrop*         _drop;
-    Menu*             _menu;
-    wxPanel*          _mainPanel;
-    wxSlider*         _position;
+    static MainWindow * _instance;
+    TextDrop*           _drop;
+    Menu*               _menu;
+    wxPanel*            _mainPanel;
+    wxSlider*           _position;
 
   public:
     MainWindow(const wxString& title);
+    static MainWindow * GetInstance() { return _instance; }
     ~MainWindow();
 
-    void OnQuit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
-    void OnOpen(wxCommandEvent& event);
+    void onQuit(wxCommandEvent& event);
+    void onAbout(wxCommandEvent& event);
+    void onOpen(wxCommandEvent& event);
+
+    void * getMainPanelHandle();
 };
 
 #endif

@@ -15,10 +15,64 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <pthread.h>
+#endif
 #include <unistd.h>
 #include <net/Net.h>
 #include <StreamingManager.h>
 #include <Main.h>
+
+class CommThread
+{
+private:
+#ifdef _WIN32
+  HANDLE        _thread;
+  unsigned long _id;
+#else
+  pthread_t   _thread;
+#endif
+
+public:
+  CommThread() : 
+#ifdef _WIN32
+    _thread(0),
+    _id(0)
+#else
+    _thread(0)
+#endif
+  {}
+
+  void initialize()
+  {
+#ifdef _WIN32
+    _thread = ::CreateThread(NULL, 0, Thread::run, (LPVOID)this, 0, &_id);
+    ::SetThreadPriority(_thread, THREAD_PRIORITY_ABOVE_NORMAL);
+#else
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    pthread_create(&_thread, &attr, CommThread::run, this);
+    pthread_attr_destroy(&attr);
+#endif
+  }
+
+#ifdef _WIN32 
+  static DWORD WINAPI run(LPVOID closure)
+#else
+  static void * run(void * closure)
+#endif
+  {
+    StreamingManager * mgr = StreamingManager::GetInstance();
+    sai::net::Net::GetInstance()->mainLoop();
+    return 0;
+  }
+
+};
+
+//=============================================================================
 
 class TcsVdoServer : public wxApp
 {
@@ -34,37 +88,39 @@ TcsVdoServer::OnInit()
   MainWindow * window = new MainWindow(wxT("tc-smart"));
   window->Show(true);
 
-  sai::net::Net::GetInstance()->mainLoop();
+  CommThread th;
+  th.initialize();
+
   return true;
 }
 
 //=============================================================================
 
+MainWindow * MainWindow::_instance = 0;
+
 MainWindow::MainWindow(const wxString& title):
   wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(800, 500)),
-  _mgr(0),
   _drop(0),
   _menu(0),
   _mainPanel(0),
   _position(0)
 {
-  _mgr = new StreamingManager();
-
+  _instance = this;
   _drop = new TextDrop(this);
   SetDropTarget(_drop);
 
   _menu = new Menu();
   SetMenuBar(_menu);
-  Connect(wxID_EXIT,  wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnQuit));
-  Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnAbout));
-  Connect(wxID_OPEN,  wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnOpen));
+  Connect(wxID_EXIT,  wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::onQuit));
+  Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::onAbout));
+  Connect(wxID_OPEN,  wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::onOpen));
 
   CreateStatusBar();    
   SetStatusText(wxT("Ready"));
 
   wxColour c1(0xcc, 0x44, 0x00, 0x50);
 
-  _mainPanel = new wxPanel(this, -1);
+  _mainPanel = new wxPanel(this, wxID_ANY);
   _mainPanel->SetBackgroundColour(c1);
 
   wxBoxSizer *vbox  = new wxBoxSizer(wxVERTICAL);
@@ -91,24 +147,31 @@ MainWindow::MainWindow(const wxString& title):
 
 MainWindow::~MainWindow()
 {
-  delete _mgr;
+  sai::net::Net::GetInstance()->shutdown();
+#ifdef _WIN32
+  Sleep(1000);
+#else
+  sleep(1);
+#endif
+  StreamingManager * mgr = StreamingManager::GetInstance();
+  delete mgr;
 }
 
 void 
-MainWindow::OnQuit(wxCommandEvent& event)
+MainWindow::onQuit(wxCommandEvent& event)
 {
   Close(true);
 }
 
 void 
-MainWindow::OnAbout(wxCommandEvent& event)
+MainWindow::onAbout(wxCommandEvent& event)
 {
   wxMessageDialog * dialog = new wxMessageDialog(NULL, wxT("tc-smart\nBy Athip"), wxT("About"), wxOK | wxICON_INFORMATION);
   dialog->ShowModal();
 }
 
 void 
-MainWindow::OnOpen(wxCommandEvent& event)
+MainWindow::onOpen(wxCommandEvent& event)
 {
   wxFileDialog * dialog = new wxFileDialog(this);
 
@@ -119,10 +182,17 @@ MainWindow::OnOpen(wxCommandEvent& event)
     if (access(fileName.c_str(), R_OK) == 0)
     {
       SetStatusText(fileName);
-      //std::string name = std::string(fileName.mb_str());
-      //_mgr->start(name);
+      std::string name = std::string(fileName.mb_str());
+      StreamingManager* mgr = StreamingManager::GetInstance();
+      mgr->start(name);
     }
   }
+}
+
+void * 
+MainWindow::getMainPanelHandle()
+{
+  return _mainPanel->GetHandle();
 }
 
 MainWindow::TextDrop::TextDrop(MainWindow *win):
