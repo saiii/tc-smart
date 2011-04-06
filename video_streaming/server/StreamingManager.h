@@ -57,16 +57,20 @@ class VlcBroadcaster
 class StreamingManager : public sai::net::TimerTask
 {
 private:
-  EventNotifier * _event;
-  StreamState     _state;
-  std::string     _transcode;
-  std::string     _fileName;
-  std::string     _addr;
-  VlcPlayer*      _player;
-  VlcBroadcaster* _bcast;
+  static StreamingManager * _instance;
+  EventNotifier *           _event;
+  StreamState               _state;
+  std::string               _transcode;
+  std::string               _fileName;
+  std::string               _addr;
+  VlcPlayer*                _player;
+  VlcBroadcaster*           _bcast;
+
+private:
+  StreamingManager();
 
 public:
-  StreamingManager();
+  static StreamingManager * GetInstance();
   ~StreamingManager();
 
   void start(std::string);

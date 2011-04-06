@@ -17,6 +17,8 @@
 
 #include "StreamingManager.h"
 
+StreamingManager * StreamingManager::_instance = 0;
+
 StreamingManager::StreamingManager():
   _event(0),
   _state(NONE),
@@ -25,6 +27,16 @@ StreamingManager::StreamingManager():
 {
   _event = new EventNotifier();
   schedule(1, 0);
+}
+
+StreamingManager * 
+StreamingManager::GetInstance()
+{
+  if (_instance == 0)
+  {
+    _instance = new StreamingManager();
+  }
+  return _instance;
 }
 
 StreamingManager::~StreamingManager()
@@ -44,8 +56,6 @@ StreamingManager::start(std::string fileName)
 
   _fileName = fileName;
 
-  // TODO Detect video + audio encoding information
-  // TODO Find the best transcode
   _transcode = "#rtp{dst=224.1.1.1,port=5004,mux=ts}";
   //_transcode = "#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=44100}:rtp{dst=224.1.1.1,port=5004,mux=ts}";
   _addr = "rtp://@224.1.1.1:5004";
@@ -62,24 +72,29 @@ StreamingManager::timerEvent()
       break;
     case START:
 #if 0
-      try -> libvlc_media_player_set_xwindow
-      if (_player.player)
+      if (_player->player)
       {
-        libvlc_media_player_stop(_player.player);
-        libvlc_media_player_release(_player.player);
-        _player.player = 0;
+        libvlc_media_player_stop(_player->player);
+        libvlc_media_player_release(_player->player);
+        _player->player = 0;
       }
 
       {
         libvlc_media_t* media = 0;
-        media       = libvlc_media_new_path(_player.instance, _bcast.addr.c_str());
-        _player.player = libvlc_media_player_new_from_media(media);
+        media           = libvlc_media_new_path(_player->instance, _bcast.addr.c_str());
+        _player->player = libvlc_media_player_new_from_media(media);
 
-        // TODO : How integrate the vlc to our custom wxWidget
-        //libvlc_set_fullscreen(_player.player, 1);
+#if _WIN32
+        HWND* handle = (HWND*)MainWindow::GetInstance()->getMainPanelHandle();
+#else
+        //GtkWidget* handle = (GtkWidget*)MainWindow::GetInstance()->getMainPanelHandle();
+        //GdkWindow* gdkwindow = gtk_widget_get_window(handle);
+        //XID xid = GDK_WINDOW_XID(gdkwindow);
+        //libvlc_media_player_set_xwindow(_player.player, xid);
+#endif
         libvlc_media_release(media);
 
-        libvlc_media_player_play(_player.player);
+        libvlc_media_player_play(_player->player);
       }
 #endif
 
@@ -104,15 +119,13 @@ StreamingManager::timerEvent()
       libvlc_vlm_pause_media(_bcast->instance, "tc_smart");
       break;
     case SHUTDOWN:
-#if 0
-      if (_player.player)
+      if (_player->player)
       {
-        libvlc_media_player_stop(_player.player);
-        libvlc_media_player_release(_player.player);
-        _player.player = 0;
+        libvlc_media_player_stop(_player->player);
+        libvlc_media_player_release(_player->player);
+        _player->player = 0;
       }
       delete _player;
-#endif
 
       libvlc_vlm_del_media(_bcast->instance, "tc_smart");
       delete _bcast;
