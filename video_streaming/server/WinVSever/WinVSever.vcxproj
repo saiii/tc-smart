@@ -55,7 +55,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\Programming\C++\wxWidgets-2.9.1\lib\vc_dll;%(AdditionalLibraryDirectories);D:\Programming\C++\vlc</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Programming\C++\vlc;D:\Programming\C++\wxWidgets-2.9.1\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libvlc.lib;Ws2_32.lib;Mswsock.lib;libcmtd.lib;libcpmtd.lib;libcmt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRTD.lib</IgnoreSpecificDefaultLibraries>
     </Link>
