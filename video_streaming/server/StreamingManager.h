@@ -27,7 +27,9 @@ typedef enum
   NONE,
   START,
   PLAYING,
+  PLAY,
   PAUSE,
+  SEEK,
   SHUTDOWN
 }StreamState;
 
@@ -63,6 +65,8 @@ private:
   std::string               _addr;
   VlcPlayer*                _player;
   VlcBroadcaster*           _bcast;
+  bool                      _localStarted;
+  int                       _seekPos;
 
 private:
   StreamingManager();
@@ -74,6 +78,11 @@ public:
   void start(std::string);
   void Notify() { timerEvent(); }
   void timerEvent();
+
+  void play();
+  void pause();
+  void stop();
+  void seek(int);
 };
 
 #endif

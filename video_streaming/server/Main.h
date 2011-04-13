@@ -54,6 +54,8 @@ class MainWindow : public wxFrame
     Menu*               _menu;
     wxPanel*            _mainPanel;
     wxSlider*           _position;
+	wxButton*           _playPause;
+	wxButton*           _stop;
 
   public:
     MainWindow(const wxString& title);
@@ -64,7 +66,11 @@ class MainWindow : public wxFrame
     void onAbout(wxCommandEvent& event);
     void onOpen(wxCommandEvent& event);
 
+	void onPlayPause(wxCommandEvent& event);
+	void onStop(wxCommandEvent& event);
+
     void * getMainPanelHandle();
+	void   setStreamPosition(int, int);
 };
 
 #endif
