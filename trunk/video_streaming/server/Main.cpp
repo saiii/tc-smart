@@ -38,6 +38,12 @@ TcsVdoServer::OnInit()
 }
 
 //=============================================================================
+enum
+{
+  BUTTON_PLAYPAUSE = wxID_HIGHEST + 1,
+  BUTTON_STOP      = wxID_HIGHEST + 2
+};
+
 
 MainWindow * MainWindow::_instance = 0;
 
@@ -58,33 +64,38 @@ MainWindow::MainWindow(const wxString& title):
   Connect(wxID_EXIT,  wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::onQuit));
   Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::onAbout));
   Connect(wxID_OPEN,  wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::onOpen));
+  Connect(BUTTON_PLAYPAUSE, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MainWindow::onPlayPause));
+  Connect(BUTTON_STOP,      wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MainWindow::onStop));
 
   CreateStatusBar();    
   SetStatusText(wxT("Ready"));
 
-  wxColour c1(0xcc, 0x44, 0x00, 0x50);
-
-  _mainPanel = new wxPanel(this, wxID_ANY);
-  _mainPanel->SetBackgroundColour(c1);
+  wxColour c1(0x00, 0xFF, 0x00, 0x00);
+  wxColour c2(0xcc, 0x44, 0x00, 0x50);  
 
   wxBoxSizer *vbox  = new wxBoxSizer(wxVERTICAL);
-  wxBoxSizer *hbox1 = new wxBoxSizer(wxHORIZONTAL);
-  wxBoxSizer *hbox2 = new wxBoxSizer(wxHORIZONTAL);
+  wxPanel * mn = new wxPanel(this, wxID_ANY);
 
-  hbox1->Add(new wxPanel(_mainPanel, wxID_ANY), 0, 0, 0);
+  _mainPanel   = new wxPanel(mn, wxID_ANY);
+  wxPanel * pL = new wxPanel(mn, wxID_ANY);
 
-  _position = new wxSlider(_mainPanel, wxID_ANY, 0, 0, 10000); 
+  mn->SetBackgroundColour(c1);
+  _mainPanel->SetBackgroundColour(c2);
+  pL->SetBackgroundColour(c2);
 
-  wxButton * play   = new wxButton(_mainPanel, -1, wxT("Play"));
-  wxButton * stop   = new wxButton(_mainPanel, -1, wxT("Stop"));
+  vbox->Add(_mainPanel, 25, wxEXPAND);
+  vbox->Add(pL,          1, wxEXPAND);
 
-  hbox2->Add(_position, 8, 0, 0);
-  hbox2->Add(stop, 0, 0, 0);
-  hbox2->Add(play, 0, 0, 0);
+  _position  = new wxSlider(pL, wxID_ANY, 0, 0, 100);
+  _stop      = new wxButton(pL, BUTTON_STOP,      "Stop");
+  _playPause = new wxButton(pL, BUTTON_PLAYPAUSE, "Play");
+  wxBoxSizer *hbox = new wxBoxSizer(wxHORIZONTAL);
+  hbox->Add(_position, 10, 0);
+  hbox->Add(_stop,      1, 0);
+  hbox->Add(_playPause, 1, 0);
 
-  vbox->Add(hbox1, 1, wxEXPAND, 0);
-  vbox->Add(hbox2, 0, wxEXPAND, 0);
-  _mainPanel->SetSizer(vbox);
+  pL->SetSizer(hbox);
+  mn->SetSizer(vbox);
 
   Center();
 }
@@ -139,10 +150,38 @@ MainWindow::onOpen(wxCommandEvent& event)
   }  
 }
 
+void 
+MainWindow::onPlayPause(wxCommandEvent& event)
+{
+  if (_playPause->GetLabelText().compare("Play") == 0)
+  {
+    _playPause->SetLabelText(wxT("Pause"));
+	StreamingManager::GetInstance()->play();
+  }
+  else
+  {
+    _playPause->SetLabelText(wxT("Play"));
+	StreamingManager::GetInstance()->pause();
+  }
+}
+
+void 
+MainWindow::onStop(wxCommandEvent& event)
+{
+  StreamingManager::GetInstance()->stop();
+}
+
 void * 
 MainWindow::getMainPanelHandle()
 {
   return _mainPanel->GetHandle();
+}
+
+void
+MainWindow::setStreamPosition(int pos, int tot)
+{
+  int val = (100 * pos) / tot;
+  _position->SetValue(val);
 }
 
 MainWindow::TextDrop::TextDrop(MainWindow *win):

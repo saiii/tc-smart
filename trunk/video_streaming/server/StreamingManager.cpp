@@ -27,10 +27,10 @@ StreamingManager::StreamingManager():
   wxTimer(),
   _state(NONE),
   _player(0),
-  _bcast(0)
+  _bcast(0),
+  _localStarted(false),
+  _seekPos(0)
 {
-  _player = new VlcPlayer();
-  _bcast = new VlcBroadcaster();
   Start(1000, false);
 }
 
@@ -53,15 +53,22 @@ StreamingManager::~StreamingManager()
 void 
 StreamingManager::start(std::string name)
 {
-  if (_state != NONE)
+  if (!(_state == NONE || _state == PLAYING))
   {
     return;
   }
 
   _fileName = name;
 
-  _transcode = "#rtp{dst=224.1.1.1,port=5004,mux=ts}";
+  //_transcode = "#rtp{dst=224.1.1.1,port=5004,mux=ts}";
+  //_transcode = "#rtp{dst=224.1.1.1,port=5004,mux=ts,name=\"tc_smart\"}";
+  //_transcode = "#transcode{acodec=mp4a,ab=128,channels=2,samplera te=44100}:rtp{dst=224.1.1.1,port=5004,mux=ts}";
   //_transcode = "#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=44100}:rtp{dst=224.1.1.1,port=5004,mux=ts}";
+  _transcode = "#transcode{vcodec=h264,vb=0,scale=0,acodec=mp3,ab=128,channels=2,samplerate=44100}:rtp{dst=224.1.1.1,port=5004,mux=ts}";
+  //_transcode = "#transcode{vcodec=mp4v,acodec=mpga,vb=1200,ab=128,deinterlace}:rtp{mux=ts,dst=224.1.1.1,port=5004,sdp=sap://,name=\"tc_smart\"}";
+
+  // flash -> mpeg, vb=1200, mp3
+  //_transcode = "#transcode{vcodec=flv1,vb=1600,acodec=mp3,ab=128,channels=2,samplerate=44100}:rtp{dst=224.1.1.1,port=5004,mux=ts}";
   _addr = "rtp://@224.1.1.1:5004";
 
   _state = START;
@@ -73,16 +80,22 @@ StreamingManager::timerEvent()
   switch (_state)
   {
     case NONE:
+      if (!_player) _player = new VlcPlayer();
+	  if (!_bcast)  _bcast  = new VlcBroadcaster();
       break;
     case START:
+#if 0
       if (_player->player)
       {
         libvlc_media_player_stop(_player->player);
         libvlc_media_player_release(_player->player);
         _player->player = 0;
       }
+#endif
 
+	  if (!_localStarted)
       {
+        _localStarted = true;
         libvlc_media_t* media = 0;
         media           = libvlc_media_new_path(_player->instance, _addr.c_str());
         _player->player = libvlc_media_player_new_from_media(media);
@@ -96,9 +109,8 @@ StreamingManager::timerEvent()
         //XID xid = GDK_WINDOW_XID(gdkwindow);
         //libvlc_media_player_set_xwindow(_player.player, xid);
 #endif
+		libvlc_media_player_play(_player->player);
         libvlc_media_release(media);
-
-        libvlc_media_player_play(_player->player);
       }
 
       {
@@ -111,14 +123,23 @@ StreamingManager::timerEvent()
     case PLAYING:
       // TODO : End of stream detection? yes -> state := shutdown
       {
-        float position = libvlc_vlm_get_media_instance_position(_bcast->instance, "tc_smart", 0);
+        //float position = libvlc_vlm_get_media_instance_position(_bcast->instance, "tc_smart", 0);
+		//int position = libvlc_vlm_get_media_instance_time(_bcast->instance, "tc_smart", 0); 
+		//int total = libvlc_vlm_get_media_instance_length(_bcast->instance, "tc_smart", 0);
+		//MainWindow::GetInstance()->setStreamPosition(position, total);
         // libvlc_vlm_seek_media(_bcast.instance, "tc-smart", position);
       }
       break;
+	case PLAY:
+	  libvlc_vlm_play_media(_bcast->instance, "tc_smart");
+	  _state = PLAYING;
+	  break;
     case PAUSE:
       // TODO : Send pause event
       libvlc_vlm_pause_media(_bcast->instance, "tc_smart");
       break;
+	case SEEK:
+	  break;
     case SHUTDOWN:
       if (_player->player)
       {
@@ -127,6 +148,7 @@ StreamingManager::timerEvent()
         _player->player = 0;
       }
       delete _player;
+	  _localStarted = false;
 
       libvlc_vlm_del_media(_bcast->instance, "tc_smart");
       delete _bcast;
@@ -134,6 +156,55 @@ StreamingManager::timerEvent()
       //_event->shutdown();
       _state = NONE;
       break;
+  }
+}
+
+void 
+StreamingManager::play()
+{
+  switch (_state)
+  {
+  case PAUSE:
+	  _state = PLAY;
+  default:
+	  break;
+  }
+}
+
+void 
+StreamingManager::pause()
+{
+  switch (_state)
+  {
+  case PLAYING:
+	  _state = PAUSE;
+  default:
+	  break;
+  }
+}
+
+void 
+StreamingManager::stop()
+{
+  switch (_state)
+  {
+  case PLAYING:
+	  _state = SHUTDOWN;
+  default:
+	  break;
+  }
+}
+
+void 
+StreamingManager::seek(int pos)
+{
+  switch (_state)
+  {
+  case PLAYING:
+	  _state = SEEK;
+	  _seekPos = pos;
+  default:
+	  break;
   }
 }
 
