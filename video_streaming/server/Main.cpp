@@ -15,62 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <pthread.h>
-#endif
-#include <unistd.h>
-#include <net/Net.h>
 #include <StreamingManager.h>
 #include <Main.h>
-
-class CommThread
-{
-private:
-#ifdef _WIN32
-  HANDLE        _thread;
-  unsigned long _id;
-#else
-  pthread_t   _thread;
-#endif
-
-public:
-  CommThread() : 
-#ifdef _WIN32
-    _thread(0),
-    _id(0)
-#else
-    _thread(0)
-#endif
-  {}
-
-  void initialize()
-  {
-#ifdef _WIN32
-    _thread = ::CreateThread(NULL, 0, Thread::run, (LPVOID)this, 0, &_id);
-    ::SetThreadPriority(_thread, THREAD_PRIORITY_ABOVE_NORMAL);
-#else
-    pthread_attr_t attr;
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-    pthread_create(&_thread, &attr, CommThread::run, this);
-    pthread_attr_destroy(&attr);
-#endif
-  }
-
-#ifdef _WIN32 
-  static DWORD WINAPI run(LPVOID closure)
-#else
-  static void * run(void * closure)
-#endif
-  {
-    StreamingManager * mgr = StreamingManager::GetInstance();
-    sai::net::Net::GetInstance()->mainLoop();
-    return 0;
-  }
-
-};
 
 //=============================================================================
 
@@ -87,9 +33,6 @@ TcsVdoServer::OnInit()
 {
   MainWindow * window = new MainWindow(wxT("tc-smart"));
   window->Show(true);
-
-  CommThread th;
-  th.initialize();
 
   return true;
 }
@@ -147,12 +90,6 @@ MainWindow::MainWindow(const wxString& title):
 
 MainWindow::~MainWindow()
 {
-  sai::net::Net::GetInstance()->shutdown();
-#ifdef _WIN32
-  Sleep(1000);
-#else
-  sleep(1);
-#endif
   StreamingManager * mgr = StreamingManager::GetInstance();
   delete mgr;
 }
@@ -173,20 +110,25 @@ MainWindow::onAbout(wxCommandEvent& event)
 void 
 MainWindow::onOpen(wxCommandEvent& event)
 {
-  wxFileDialog * dialog = new wxFileDialog(this);
+  wxFileDialog dialog(this);
 
-  if (dialog->ShowModal() == wxID_OK)
+  if (dialog.ShowModal() == wxID_OK)
   {
-    wxString fileName = dialog->GetPath();
+    wxString fileName = dialog.GetPath();
 
+#ifndef _WIN32
     if (access(fileName.c_str(), R_OK) == 0)
     {
+#endif
       SetStatusText(fileName);
-      std::string name = std::string(fileName.mb_str());
-      StreamingManager* mgr = StreamingManager::GetInstance();
-      mgr->start(name);
+	  std::string name = fileName.ToStdString();
+      //StreamingManager* mgr = StreamingManager::GetInstance();
+      //mgr->start(name);
+#ifndef _WIN32
     }
-  }
+#endif
+	dialog.Close(false);
+  }  
 }
 
 void * 
