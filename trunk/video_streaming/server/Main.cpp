@@ -48,6 +48,7 @@ MainWindow::MainWindow(const wxString& title):
   _mainPanel(0),
   _position(0)
 {
+  StreamingManager* mgr = StreamingManager::GetInstance();
   _instance = this;
   _drop = new TextDrop(this);
   SetDropTarget(_drop);
@@ -114,20 +115,27 @@ MainWindow::onOpen(wxCommandEvent& event)
 
   if (dialog.ShowModal() == wxID_OK)
   {
-    wxString fileName = dialog.GetPath();
+    wxString fileName(dialog.GetPath());
 
-#ifndef _WIN32
-    if (access(fileName.c_str(), R_OK) == 0)
-    {
-#endif
-      SetStatusText(fileName);
-	  std::string name = fileName.ToStdString();
-      //StreamingManager* mgr = StreamingManager::GetInstance();
-      //mgr->start(name);
-#ifndef _WIN32
-    }
-#endif
-	dialog.Close(false);
+	const int SIZE = 2048;
+	wchar_t * wbuff = new wchar_t[2048];
+	memset(wbuff, 0, sizeof(wchar_t) * SIZE);
+
+	const wchar_t* ptr = fileName.wc_str();
+	memcpy(wbuff, ptr, fileName.length() * sizeof(wchar_t));
+
+	char * tmp = new char[SIZE];
+	for (int i = 0; i < 1024; i += 1)
+	{
+		tmp[i] = (char)wbuff[i];
+	}
+
+    SetStatusText(fileName);
+    StreamingManager* mgr = StreamingManager::GetInstance();
+    mgr->start(tmp);
+
+	delete [] tmp;
+	delete [] wbuff;
   }  
 }
 

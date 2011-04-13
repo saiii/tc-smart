@@ -29,6 +29,8 @@ StreamingManager::StreamingManager():
   _player(0),
   _bcast(0)
 {
+  _player = new VlcPlayer();
+  _bcast = new VlcBroadcaster();
   Start(1000, false);
 }
 
@@ -49,14 +51,14 @@ StreamingManager::~StreamingManager()
 }
 
 void 
-StreamingManager::start(std::string fileName)
+StreamingManager::start(std::string name)
 {
   if (_state != NONE)
   {
     return;
   }
 
-  _fileName = fileName;
+  _fileName = name;
 
   _transcode = "#rtp{dst=224.1.1.1,port=5004,mux=ts}";
   //_transcode = "#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=44100}:rtp{dst=224.1.1.1,port=5004,mux=ts}";
@@ -73,7 +75,6 @@ StreamingManager::timerEvent()
     case NONE:
       break;
     case START:
-#if 1
       if (_player->player)
       {
         libvlc_media_player_stop(_player->player);
@@ -88,6 +89,7 @@ StreamingManager::timerEvent()
 
 #if _WIN32
         HWND* handle = (HWND*)MainWindow::GetInstance()->getMainPanelHandle();
+		libvlc_media_player_set_hwnd(_player->player, handle);
 #else
         //GtkWidget* handle = (GtkWidget*)MainWindow::GetInstance()->getMainPanelHandle();
         //GdkWindow* gdkwindow = gtk_widget_get_window(handle);
@@ -98,15 +100,12 @@ StreamingManager::timerEvent()
 
         libvlc_media_player_play(_player->player);
       }
-#else
 
       {
         char *vlcOptions[] = {""};
-        _bcast = new VlcBroadcaster();
-        libvlc_vlm_add_broadcast(_bcast->instance, "tc_smart", _fileName.c_str(), _transcode.c_str(), 0, vlcOptions, 1, 0);
+		libvlc_vlm_add_broadcast(_bcast->instance, "tc_smart", _fileName.c_str(), _transcode.c_str(), 0, vlcOptions, 1, 0);
         libvlc_vlm_play_media(_bcast->instance, "tc_smart");
       }
-#endif
       _state = PLAYING;
       break;
     case PLAYING:
@@ -142,7 +141,8 @@ VlcPlayer::VlcPlayer():
   instance(0),
   player(0)
 {
-  instance = libvlc_new(0, 0);
+  char *vlcOptions[] = {""};
+  instance = libvlc_new(1, vlcOptions);
 }
 
 VlcPlayer::~VlcPlayer()
