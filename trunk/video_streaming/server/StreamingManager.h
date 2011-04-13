@@ -19,8 +19,7 @@
 #define __TCSMART_SERVER_STREAMINGMANAGER__
 
 #include <string>
-#include <net/TimerTask.h>
-#include <EventNotifier.h>
+#include <wx/timer.h>
 #include <vlc/vlc.h>
 
 typedef enum
@@ -54,11 +53,10 @@ class VlcBroadcaster
 };
 
 
-class StreamingManager : public sai::net::TimerTask
+class StreamingManager : public wxTimer
 {
 private:
   static StreamingManager * _instance;
-  EventNotifier *           _event;
   StreamState               _state;
   std::string               _transcode;
   std::string               _fileName;
@@ -74,6 +72,7 @@ public:
   ~StreamingManager();
 
   void start(std::string);
+  void Notify() { timerEvent(); }
   void timerEvent();
 };
 
