@@ -12,10 +12,15 @@ namespace CsServer
     public partial class frmMain : Form
     {
         private bool _sizeChanged = false;
+        private bool _playing = false;
+        private UInt32 _bcastIndex = 0;
+        private UInt32 _playerIndex = 0;
 
-        public frmMain()
+        unsafe public frmMain()
         {
             InitializeComponent();
+            _bcastIndex = VLCLoader.VLCInterface_Bcast_Init();
+            _playerIndex = VLCLoader.VLCInterface_Player_Init(this.pnlMain.Handle.ToPointer());
         }
 
         private void frmMain_Resize(object sender, EventArgs e)
@@ -44,7 +49,18 @@ namespace CsServer
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show(openFileDialog.FileName + ", Sure?");
+                if (_playing)
+                {
+                    VLCLoader.VLCInterface_Bcast_Stop(_bcastIndex);
+                    _bcastIndex = VLCLoader.VLCInterface_Bcast_Init();
+                }
+
+                string destination = "rtp{dst=224.1.1.1,port=5004,mux=ts}";
+                string transcode = RegistryAccessor.GetTranscode();
+                string comb = transcode.Length == 0 ? "#" + destination : "#" + transcode + ":" + destination;
+                VLCLoader.VLCInterface_Bcast_Play(_bcastIndex, openFileDialog.FileName, comb);
+                btnPlay.Text = "Pause";
+                _playing = true;
             }
         }
 
@@ -61,19 +77,34 @@ namespace CsServer
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            if (btnPlay.Text == "Play")
+            if (btnPlay.Text == "Resume")
             {
                 btnPlay.Text = "Pause";
+                VLCLoader.VLCInterface_Bcast_Resume(_bcastIndex);
             }
-            else
+            else if (btnPlay.Text == "Pause")
             {
-                btnPlay.Text = "Play";
+                btnPlay.Text = "Resume";
+                VLCLoader.VLCInterface_Bcast_Pause(_bcastIndex);
             }
         }
 
         private void btnStop_Click(object sender, EventArgs e)
         {
+            VLCLoader.VLCInterface_Bcast_Stop(_bcastIndex);
+            _bcastIndex = VLCLoader.VLCInterface_Bcast_Init();
+            _playing = false;
+        }
 
+        private void configurationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmConfiguration config = new frmConfiguration();
+            config.ShowDialog();
+        }
+
+        private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            VLCLoader.VLCInterface_Destroy();
         }
     }
 }
