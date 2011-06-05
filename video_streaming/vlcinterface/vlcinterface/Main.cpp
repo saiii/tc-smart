@@ -168,3 +168,42 @@ VLCInterface_Player_Stop(unsigned int index)
   libvlc_media_player_release(player->player);
   player->player = 0;
 }
+
+DllPrefix 
+unsigned int __stdcall 
+VLCInterface_Player_GetPosition(unsigned int index)
+{
+  if (BcastList.size() == 0)
+  {
+    return 0;
+  }
+
+  VlcBroadcaster * bcast = BcastList.at(index);
+  return libvlc_vlm_get_media_instance_time(bcast->instance, "tc_smart", 0/* FIXME : What is this? */);
+}
+
+DllPrefix 
+unsigned int __stdcall 
+VLCInterface_Bcast_GetLength(unsigned int index)
+{
+  if (BcastList.size() == 0)
+  {
+    return 0;
+  }
+
+  VlcBroadcaster * bcast = BcastList.at(index);
+  return libvlc_vlm_get_media_instance_length(bcast->instance, "tc_smart", 0 /*FIXME : What is this?*/);
+}
+
+DllPrefix 
+void __stdcall 
+VLCInterface_Bcast_SetPosition(unsigned int index, unsigned int pos)
+{
+  if (BcastList.size() == 0)
+  {
+    return;
+  }
+
+  VlcBroadcaster * bcast = BcastList.at(index);
+  libvlc_vlm_seek_media(bcast->instance, "tc_smart", (float)pos);
+}
