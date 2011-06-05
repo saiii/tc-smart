@@ -53,4 +53,9 @@ DllPrefix void         __stdcall VLCInterface_Bcast_Stop(unsigned int index);
 DllPrefix unsigned int __stdcall VLCInterface_Player_Init(void *);
 DllPrefix void         __stdcall VLCInterface_Player_Stop(unsigned int);
 
+
+DllPrefix unsigned int __stdcall VLCInterface_Bcast_GetPosition(unsigned int);
+DllPrefix unsigned int __stdcall VLCInterface_Bcast_GetLength(unsigned int);
+DllPrefix void         __stdcall VLCInterface_Bcast_SetPosition(unsigned int, unsigned int);
+
 #endif
