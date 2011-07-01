@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <vlc/vlc.h>
 
 #include "OneInstance.h"
 #include "Daemonizer.h"
@@ -24,6 +25,7 @@
 
 int main(int argc, char* argv[])
 {
+  printf("LibVLC Version: %s\n", libvlc_get_version()); 
   // Become a daemon
   Daemonizer daemon;
   if (!daemon.initialize())
