@@ -9,42 +9,55 @@ namespace CsServer
 {
     public class RegistryAccessor
     {
-        public static string GetTranscode()
+        private const string _PATH = "Software\\tc-smart\\Settings";
+
+        private static string GetReg(string name)
         {
             try
             {
-                RegistryKey key = Registry.CurrentUser.OpenSubKey("TcSmartServer");
-                if (key == null)
-                {
-                    key = Registry.CurrentUser.CreateSubKey("TcSmartServer");
-                }
+                RegistryKey reg = Registry.CurrentUser.CreateSubKey(_PATH);
 
-                object obj = key.GetValue("transcode");
-                return obj == null ? "" : obj.ToString();
+                string val = (string)reg.GetValue(name);
+                return val == null ? "" : val;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
             return "";
         }
 
-        public static void PutTranscode(string value)
+        private static void PutReg(string name, string value)
         {
             try
             {
-                RegistryKey key = Registry.CurrentUser.OpenSubKey("TcSmartServer");
-                if (key == null)
-                {
-                    key = Registry.CurrentUser.CreateSubKey("TcSmartServer");
-                }
-
-                key.SetValue("transcode", (object)value);
+                RegistryKey reg = Registry.CurrentUser.CreateSubKey(_PATH);
+                reg.SetValue(name, value);
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
+        }
+
+        public static string GetFirst()
+        {
+            return GetReg("first");
+        }
+
+        public static void PutFirst(string val)
+        {
+            PutReg("first", val);
+        }
+
+        public static string GetTranscode()
+        {
+            return GetReg("transcode");
+        }
+
+        public static void PutTranscode(string value)
+        {
+            PutReg("transcode", value);
         }
     }
 }

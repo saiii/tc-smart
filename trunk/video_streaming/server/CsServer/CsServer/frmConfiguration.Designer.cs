@@ -42,7 +42,7 @@
             this.flpMain.Controls.Add(this.lblTranscode);
             this.flpMain.Controls.Add(this.txtTranscode);
             this.flpMain.Controls.Add(this.btnApply);
-            this.flpMain.Location = new System.Drawing.Point(3, 103);
+            this.flpMain.Location = new System.Drawing.Point(3, 124);
             this.flpMain.Name = "flpMain";
             this.flpMain.Size = new System.Drawing.Size(393, 29);
             this.flpMain.TabIndex = 1;
@@ -81,7 +81,7 @@
             this.txtWarning.Multiline = true;
             this.txtWarning.Name = "txtWarning";
             this.txtWarning.ReadOnly = true;
-            this.txtWarning.Size = new System.Drawing.Size(393, 98);
+            this.txtWarning.Size = new System.Drawing.Size(393, 117);
             this.txtWarning.TabIndex = 2;
             this.txtWarning.Text = resources.GetString("txtWarning.Text");
             // 
@@ -89,7 +89,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(402, 135);
+            this.ClientSize = new System.Drawing.Size(402, 155);
             this.Controls.Add(this.txtWarning);
             this.Controls.Add(this.flpMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
