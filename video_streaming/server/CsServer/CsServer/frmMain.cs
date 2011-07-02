@@ -21,6 +21,13 @@ namespace CsServer
             InitializeComponent();
             _bcastIndex = VLCLoader.VLCInterface_Bcast_Init();
             _playerIndex = VLCLoader.VLCInterface_Player_Init(this.pnlMain.Handle.ToPointer());
+
+            string first = RegistryAccessor.GetFirst();
+            if (first.Length == 0)
+            {
+                RegistryAccessor.PutTranscode("transcode{vcodec=h264,vb=0,scale=0,acodec=mp3,ab=128,channels=2,samplerate=44100}");
+                RegistryAccessor.PutFirst("false");
+            }
         }
 
         private void frmMain_Resize(object sender, EventArgs e)

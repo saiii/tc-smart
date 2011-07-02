@@ -118,8 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="txtWarning.Text" xml:space="preserve">
-    <value>This is to customize transcoding option used by libVLC. Defining of this parameter may impact application performance significantly. 
-
-Note: The current version cannot write the configuration to the registry key yet. If you want to customize the transcoding string, please manually modify "HKEY_CURRENT_USER/TcSmartServer" by putting a string for a parameter named "transcode".</value>
+    <value>This is to customize transcoding option used by libVLC. Defining of this parameter may impact application performance significantly. If the target video encoding is mpeg and audio encoding is either mp3 or aac, the transcoding can be removed. This will greatly reduce CPU consumption of the tc-smart server. However, to use the program for various types of video/audio, it is a recommendation to enable the transcode. 
+Note: There might be some transcoding options that is more suitable for your media files, see the VLC transcoding for more detail.</value>
   </data>
 </root>
