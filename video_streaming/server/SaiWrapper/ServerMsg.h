@@ -5,7 +5,7 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-//              
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,16 +15,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
-#ifndef __TCSMART_VS_MESSAGE__
-#define __TCSMART_VS_MESSAGE__
+#ifndef __TCSMART_VS_SERVERMSG__
+#define __TCSMART_VS_SERVERMSG__
 
-// Server to client
-#define TCSM_SVR_GENERIC     100
+class ServerMsg
+{
+private:
+  static ServerMsg* _instance;
 
-// Client to server
-#define TCSM_CLI_GENERIC     300
+private:
+  ServerMsg();
 
-#define TCSM_VS_CLIENT_MESSAGE "<TCSM<CLIENT>>"
-#define TCSM_VS_SERVER_MESSAGE "<TCSM<SERVER>>"
+public:
+  static ServerMsg* GetInstance();
+  ~ServerMsg();
+
+  void send(const char * msg);
+};
 
 #endif
