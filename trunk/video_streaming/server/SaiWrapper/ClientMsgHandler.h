@@ -5,7 +5,7 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-//              
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,16 +15,29 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
-#ifndef __TCSMART_VS_MESSAGE__
-#define __TCSMART_VS_MESSAGE__
+#ifndef __TCSMART_VS_CLIENTMSGHANDLER__
+#define __TCSMART_VS_CLIENTMSGHANDLER__
 
-// Server to client
-#define TCSM_SVR_GENERIC     100
+#include <net/DataDescriptor.h>
+#include <net/DataHandler.h>
 
-// Client to server
-#define TCSM_CLI_GENERIC     300
+class ClientMsgHandler : public sai::net::DataHandler
+{
+private:
+  typedef void (__stdcall * MsgCallback)(const char* ip, const char * msg);
 
-#define TCSM_VS_CLIENT_MESSAGE "<TCSM<CLIENT>>"
-#define TCSM_VS_SERVER_MESSAGE "<TCSM<SERVER>>"
+  static ClientMsgHandler* _instance;
+  MsgCallback _cb;
+
+private:
+  ClientMsgHandler();
+
+public:
+  static ClientMsgHandler* GetInstance();
+  ~ClientMsgHandler();
+
+  void setCallback(MsgCallback cb);
+  void processDataEvent(sai::net::DataDescriptor& desc, std::string& msg);
+};
 
 #endif
