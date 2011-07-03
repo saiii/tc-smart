@@ -22,7 +22,7 @@
 #include <net/DataHandler.h>
 
 #include <Message.h>
-#include <ServerMsg.h>
+#include "ServerMsg.h"
 #include <ClientMsgHandler.h>
 
 #ifdef _DLL
@@ -42,9 +42,7 @@ using namespace sai::net;
 DllPrefix const char * __stdcall 
 Sai_Get_Version()
 {
-  extern std::string GetVersion();
-
-  static std::string ret = GetVersion();
+  static std::string ret = "0.0.2b"; // just for now
   return ret.c_str();
 }
 
