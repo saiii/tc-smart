@@ -18,7 +18,7 @@
 #include <sstream>
 #include <net/DataBus.h>
 
-#include <Message.h>
+#include "Message.h"
 #include "ServerMsg.h"
 
 ServerMsg* ServerMsg::_instance = 0;
