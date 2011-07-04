@@ -21,7 +21,12 @@
 #include <vlc/vlc.h>
 #include <string>
 
-class Command 
+#include <net/DataHandler.h>
+#include <net/DataDescriptor.h>
+#include <net/TimerTask.h>
+
+class Command : public sai::net::DataHandler,
+                public sai::net::TimerTask
 {
 private:
   class Vlc
@@ -36,7 +41,8 @@ private:
   };
 
 private:
-  Vlc* _vlc;
+  Vlc*     _vlc;
+  uint32_t _svrCnt;
 
 public:
   Command();
@@ -44,8 +50,11 @@ public:
 
   void initialize();
 
+  void timerEvent();
+
   // Events from server
-  void start(std::string);
+  void processDataEvent(sai::net::DataDescriptor& desc, std::string& msg);
+  void start();
   void shutdown();
 };
 

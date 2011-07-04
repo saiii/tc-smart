@@ -17,9 +17,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sstream>
 
 #include <net/Net.h>
 #include <net/DataBus.h>
+#include <utils/XmlReader.h>
 
 #include <Message.h>
 #include "Command.h"
@@ -32,50 +34,15 @@ public:
   }
 };
 
-class CommandClient
-{
-protected:
-  Command * _command;
-
-public:
-  CommandClient(Command * cmd) : _command(cmd) {}
-  virtual ~CommandClient() {}
-};
-
-class Start : public sai::net::DataHandler,
-              public CommandClient
-{
-public:
-  Start(Command * cmd) : CommandClient(cmd) {}
-  ~Start() {}
-
-  void processDataEvent(sai::net::DataDescriptor& desc, std::string& msg)
-  {
-    // TODO : process message
-    _command->start(msg);
-  }
-};
-
-class Shutdown : public sai::net::DataHandler,
-                 public CommandClient
-{
-public:
-  Shutdown(Command * cmd) : CommandClient(cmd) {}
-  ~Shutdown() {}
-
-  void processDataEvent(sai::net::DataDescriptor& desc, std::string& msg)
-  {
-    _command->shutdown();
-  }
-};
-
 //=============================================================================
 
 using namespace sai::net;
 
 Command::Command():
-  _vlc(0)
+  _vlc(0),
+  _svrCnt(0)
 {
+  schedule(1, 0);
 }
 
 Command::~Command()
@@ -122,10 +89,10 @@ Command::initialize()
 
   // Communication initialization
   McastDataBusChannel channel;
-  channel.setPort(2010);
+  channel.setPort(8010);
   channel.setLocalAddress("0.0.0.0");
-  channel.setSendMcast("225.1.1.1");
-  channel.addRecvMcast("225.2.2.2");
+  channel.setSendMcast("225.2.2.2");
+  channel.addRecvMcast("225.1.1.1");
 
   DataBus *bus = DataBus::GetInstance();
   bus->setChannel(&channel);
@@ -133,20 +100,21 @@ Command::initialize()
   Default def;
   bus->setDefaultHandler(&def);
 
-  Start start(this);
-  Shutdown shutdown(this);
-  
-  bus->registerHandler(TCSM_VS_START,    &start);
-  bus->registerHandler(TCSM_VS_SHUTDOWN, &shutdown);
-
+  bus->registerHandler(TCSM_SVR_GENERIC,  this);
   bus->listen(TCSM_VS_SERVER_MESSAGE);
-
-  // Wait transcode and play command from server
-  // play
-  // there might be pause or stop ??
-  // get shutdown command from server and turn off the window
-
   bus->activate();
+
+  Net::GetInstance()->mainLoop();
+  exit(0);
+}
+
+void 
+Command::start()
+{
+  if (_vlc->player)
+  {
+    shutdown();
+  }
 
   _vlc = new Vlc();
   libvlc_media_t* media = 0;
@@ -155,22 +123,6 @@ Command::initialize()
   libvlc_set_fullscreen(_vlc->player, 1);
   libvlc_media_release(media);
   libvlc_media_player_play(_vlc->player);
-
-  Net::GetInstance()->mainLoop();
-  exit(0);
-}
-
-void 
-Command::start(std::string msg)
-{
-#if 0
-  if (_vlc->player)
-  {
-    shutdown();
-  }
-#endif
-
-  printf("Get start command at addr = %s\n", msg.c_str());
 }
 
 void 
@@ -182,6 +134,58 @@ Command::shutdown()
     libvlc_media_player_release(_vlc->player);
     _vlc->player = 0;
   }
+}
+
+void 
+Command::processDataEvent(sai::net::DataDescriptor& desc, std::string& msg)
+{
+  sai::utils::XmlReader reader;
+  reader.parseMem(msg);
+  reader.moveTo("vs_msg");
+  std::string time = reader.get("time", "value");
+  if (time.length() > 0)
+  {
+    _svrCnt = 0;
+  }
+  else
+  {
+    std::string mode = reader.get("mode", "value");
+    if (mode.length() > 0)
+    {
+      if (mode.compare("start") == 0)
+      {
+        start();
+      }
+      else if (mode.compare("shutdown") == 0)
+      {
+        shutdown();
+      }
+    }
+  }
+}
+
+void
+Command::timerEvent()
+{
+  if (++_svrCnt > 10)
+  {
+    _svrCnt = 0;
+    shutdown();
+  }
+
+  std::stringstream txt;
+  txt << "<?xml version=\"1.0\"?>\n";
+  txt << "<tcsm>";
+  txt <<   "<hb>";
+  txt <<     "<addr value=\"" << Net::GetInstance()->getLocalAddress() << "\" />";
+  txt <<   "</hb>";
+  txt << "</tcsm>";
+  
+  DataBus::GetInstance()->send(TCSM_VS_CLIENT_MESSAGE, TCSM_CLI_GENERIC, txt.str());
+
+  //printf("%s\n", Net::GetInstance()->getLocalAddress().c_str());
+  //printf("%s\n", txt.str().c_str());
+  schedule();
 }
 
 Command::Vlc::Vlc():
