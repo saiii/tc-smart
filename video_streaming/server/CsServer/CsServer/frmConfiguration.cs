@@ -144,7 +144,7 @@ namespace CsServer
 
             RegistryAccessor.PutIP(result);
 
-            this.Hide();
+            this.Close();
         }
     }
 }
