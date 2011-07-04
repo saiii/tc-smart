@@ -29,9 +29,9 @@ namespace CsServer
 
                 string xmlStartup = "<?xml version='1.0'?>\n";
                 xmlStartup = xmlStartup + "<tcsm>";
-                xmlStartup = xmlStartup + "<vs_mode>";
+                xmlStartup = xmlStartup + "<vs_msg>";
                 xmlStartup = xmlStartup + "<mode value=\"shutdown\" />";
-                xmlStartup = xmlStartup + "</vs_mode>";
+                xmlStartup = xmlStartup + "</vs_msg>";
                 xmlStartup = xmlStartup + "</tcsm>";
                 SAILoader.Sai_Net_Send(xmlStartup);
 
