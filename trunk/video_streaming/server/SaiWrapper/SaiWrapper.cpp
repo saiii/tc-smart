@@ -46,6 +46,15 @@ Sai_Get_Version()
   return ret.c_str();
 }
 
+DllPrefix 
+const char * __stdcall Sai_Net_GetNicList()
+{
+  static std::string ret = "";
+  Net * net = Net::GetInstance();
+  ret = net->getNicList(ret); 
+  return ret.c_str();
+}
+
 class DummyPrinter : public DataHandler
 {
 public:
@@ -59,6 +68,7 @@ Sai_Net_Start(unsigned int port,
               const char * recvMcast)
 {
   Net::GetInstance()->setPreferredAddress(localAddress);
+  Net::GetInstance()->initialize();
 
   // Communication initialization
   McastDataBusChannel channel;
@@ -83,8 +93,14 @@ Sai_Net_Start(unsigned int port,
   Net::GetInstance()->mainLoop();
 }
 
+DllPrefix void 
+Sai_Net_Stop()
+{
+  Net::GetInstance()->shutdown();
+}
+
 DllPrefix void __stdcall 
-Sai_Net_Send(const char * msg, unsigned int size)
+Sai_Net_Send(const char * msg)
 {
   ServerMsg * server = ServerMsg::GetInstance();
   server->send(msg);

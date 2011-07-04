@@ -44,6 +44,15 @@ namespace CsServer
                 tlpMain.Height = this.Height;
                 tlpMain.Location = new Point(0, 24);
             }
+
+            string xml = "<?xml version='1.0'?>\n";
+            xml = xml + "<tcsm>";
+            xml = xml + "<vs_hb>";
+            xml = xml + "<time value=\"" + DateTime.Now.ToString() + "\" />";
+            xml = xml + "</vs_hb>";
+            xml = xml + "</tcsm>";
+
+            SAILoader.Sai_Net_Send(xml);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -112,6 +121,27 @@ namespace CsServer
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             VLCLoader.VLCInterface_Destroy();
+            SAILoader.Sai_Net_Stop();
+            SAIThread.thread.Abort();
+            Application.Exit();
+        }
+
+        public void processDataEvent(string addr, string msg)
+        {
+            MessageBox.Show(addr + " " + msg);
+        }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                SAILoader.GetInstance().Sai_SetCallback(processDataEvent);
+            }
+            catch (DllNotFoundException dnfe)
+            {
+                MessageBox.Show("Could not load the dll file!");
+                Application.Exit();
+            }
         }
     }
 }

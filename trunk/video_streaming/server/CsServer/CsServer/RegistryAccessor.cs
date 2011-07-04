@@ -59,5 +59,15 @@ namespace CsServer
         {
             PutReg("transcode", value);
         }
+
+        public static string GetIP()
+        {
+            return GetReg("ip");
+        }
+
+        public static void PutIP(string value)
+        {
+            PutReg("ip", value);
+        }
     }
 }

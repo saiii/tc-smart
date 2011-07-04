@@ -121,6 +121,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="RegistryAccessor.cs" />
+    <Compile Include="SAILoader.cs" />
     <Compile Include="VLCLoader.cs" />
   </ItemGroup>
   <ItemGroup>
