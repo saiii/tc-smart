@@ -19,6 +19,7 @@ namespace CsServer
                 string dir = System.IO.Path.GetDirectoryName(a.Location);
                 System.IO.Directory.SetCurrentDirectory(dir);
                 VLCLoader.VLCInterface_Init();
+                SAIThread.start();
             }
             catch (Exception e)
             {

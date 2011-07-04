@@ -34,14 +34,17 @@
             this.txtTranscode = new System.Windows.Forms.TextBox();
             this.btnApply = new System.Windows.Forms.Button();
             this.txtWarning = new System.Windows.Forms.TextBox();
+            this.flpIP = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblIP = new System.Windows.Forms.Label();
+            this.lstIP = new System.Windows.Forms.ListBox();
             this.flpMain.SuspendLayout();
+            this.flpIP.SuspendLayout();
             this.SuspendLayout();
             // 
             // flpMain
             // 
             this.flpMain.Controls.Add(this.lblTranscode);
             this.flpMain.Controls.Add(this.txtTranscode);
-            this.flpMain.Controls.Add(this.btnApply);
             this.flpMain.Location = new System.Drawing.Point(3, 124);
             this.flpMain.Name = "flpMain";
             this.flpMain.Size = new System.Drawing.Size(393, 29);
@@ -61,13 +64,13 @@
             // 
             this.txtTranscode.Location = new System.Drawing.Point(67, 3);
             this.txtTranscode.Name = "txtTranscode";
-            this.txtTranscode.Size = new System.Drawing.Size(241, 20);
+            this.txtTranscode.Size = new System.Drawing.Size(320, 20);
             this.txtTranscode.TabIndex = 1;
             // 
             // btnApply
             // 
             this.btnApply.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnApply.Location = new System.Drawing.Point(314, 3);
+            this.btnApply.Location = new System.Drawing.Point(321, 218);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(75, 20);
             this.btnApply.TabIndex = 2;
@@ -85,12 +88,42 @@
             this.txtWarning.TabIndex = 2;
             this.txtWarning.Text = resources.GetString("txtWarning.Text");
             // 
+            // flpIP
+            // 
+            this.flpIP.Controls.Add(this.lblIP);
+            this.flpIP.Controls.Add(this.lstIP);
+            this.flpIP.Location = new System.Drawing.Point(3, 159);
+            this.flpIP.Name = "flpIP";
+            this.flpIP.Size = new System.Drawing.Size(393, 53);
+            this.flpIP.TabIndex = 3;
+            // 
+            // lblIP
+            // 
+            this.lblIP.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblIP.Location = new System.Drawing.Point(3, 13);
+            this.lblIP.Name = "lblIP";
+            this.lblIP.Size = new System.Drawing.Size(58, 23);
+            this.lblIP.TabIndex = 0;
+            this.lblIP.Text = "IP";
+            this.lblIP.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lstIP
+            // 
+            this.lstIP.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lstIP.FormattingEnabled = true;
+            this.lstIP.Location = new System.Drawing.Point(67, 3);
+            this.lstIP.Name = "lstIP";
+            this.lstIP.Size = new System.Drawing.Size(320, 43);
+            this.lstIP.TabIndex = 1;
+            // 
             // frmConfiguration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(402, 155);
+            this.ClientSize = new System.Drawing.Size(402, 242);
+            this.Controls.Add(this.flpIP);
             this.Controls.Add(this.txtWarning);
+            this.Controls.Add(this.btnApply);
             this.Controls.Add(this.flpMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "frmConfiguration";
@@ -99,6 +132,7 @@
             this.Load += new System.EventHandler(this.frmConfiguration_Load);
             this.flpMain.ResumeLayout(false);
             this.flpMain.PerformLayout();
+            this.flpIP.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -111,5 +145,8 @@
         private System.Windows.Forms.TextBox txtTranscode;
         private System.Windows.Forms.Button btnApply;
         private System.Windows.Forms.TextBox txtWarning;
+        private System.Windows.Forms.FlowLayoutPanel flpIP;
+        private System.Windows.Forms.Label lblIP;
+        private System.Windows.Forms.ListBox lstIP;
     }
 }
