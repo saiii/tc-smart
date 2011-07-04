@@ -50,18 +50,18 @@ namespace CsServer
             {
                 string xmlStartup = "<?xml version='1.0'?>\n";
                 xmlStartup = xmlStartup + "<tcsm>";
-                xmlStartup = xmlStartup + "<vs_mode>";
+                xmlStartup = xmlStartup + "<vs_msg>";
                 xmlStartup = xmlStartup + "<mode value=\"start\" />";
-                xmlStartup = xmlStartup + "</vs_mode>";
+                xmlStartup = xmlStartup + "</vs_msg>";
                 xmlStartup = xmlStartup + "</tcsm>";
                 SAILoader.Sai_Net_Send(xmlStartup);
             }
 
             string xml = "<?xml version='1.0'?>\n";
             xml = xml + "<tcsm>";
-            xml = xml + "<vs_hb>";
+            xml = xml + "<vs_msg>";
             xml = xml + "<time value=\"" + DateTime.Now.ToString() + "\" />";
-            xml = xml + "</vs_hb>";
+            xml = xml + "</vs_msg>";
             xml = xml + "</tcsm>";
 
             SAILoader.Sai_Net_Send(xml);
