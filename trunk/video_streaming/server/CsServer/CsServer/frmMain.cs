@@ -15,6 +15,7 @@ namespace CsServer
         private bool _playing = false;
         private UInt32 _bcastIndex = 0;
         private UInt32 _playerIndex = 0;
+        private UInt32 _startMessages = 0;
 
         unsafe public frmMain()
         {
@@ -43,6 +44,17 @@ namespace CsServer
                 tlpMain.Width = this.Width - 8;
                 tlpMain.Height = this.Height;
                 tlpMain.Location = new Point(0, 24);
+            }
+
+            if (++_startMessages < 5)
+            {
+                string xmlStartup = "<?xml version='1.0'?>\n";
+                xmlStartup = xmlStartup + "<tcsm>";
+                xmlStartup = xmlStartup + "<vs_mode>";
+                xmlStartup = xmlStartup + "<mode value=\"start\" />";
+                xmlStartup = xmlStartup + "</vs_mode>";
+                xmlStartup = xmlStartup + "</tcsm>";
+                SAILoader.Sai_Net_Send(xmlStartup);
             }
 
             string xml = "<?xml version='1.0'?>\n";
@@ -120,6 +132,8 @@ namespace CsServer
 
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
+            frmShutdown s = new frmShutdown();
+            s.ShowDialog();
             VLCLoader.VLCInterface_Destroy();
             SAILoader.Sai_Net_Stop();
             SAIThread.thread.Abort();
