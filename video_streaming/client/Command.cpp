@@ -104,6 +104,7 @@ Command::initialize()
   bus->listen(TCSM_VS_SERVER_MESSAGE);
   bus->activate();
 
+  _vlc = new Vlc();
   Net::GetInstance()->mainLoop();
   exit(0);
 }
@@ -116,7 +117,6 @@ Command::start()
     shutdown();
   }
 
-  _vlc = new Vlc();
   libvlc_media_t* media = 0;
   media        = libvlc_media_new_path(_vlc->instance, "rtp://@224.1.1.1:5004");
   _vlc->player = libvlc_media_player_new_from_media(media);
@@ -146,6 +146,10 @@ Command::processDataEvent(sai::net::DataDescriptor& desc, std::string& msg)
   if (time.length() > 0)
   {
     _svrCnt = 0;
+    if (!_vlc->player)
+    {
+      start();
+    }
   }
   else
   {
