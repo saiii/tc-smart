@@ -142,7 +142,15 @@ namespace CsServer
 
         public void processDataEvent(string addr, string msg)
         {
-            MessageBox.Show(addr + " " + msg);
+            this.Invoke((MethodInvoker)delegate
+            {
+                this.dataEvent(addr, msg);
+            });
+        }
+
+        private void dataEvent(string addr, string msg)
+        {
+            //MessageBox.Show("Received data -> " + addr + " " + msg);
         }
 
         private void frmMain_Load(object sender, EventArgs e)
