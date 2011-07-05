@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<tc-smart>
+  <FileManager>
+    <DefaultDirectory value="network:///" />
+    <!--DefaultDirectory value="/home/athip"></DefaultDirectory-->
+  </FileManager>
+  <VideoStreamingClient>
+  </VideoStreamingClient>
+</tc-smart>
