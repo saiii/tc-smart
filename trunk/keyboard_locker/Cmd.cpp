@@ -15,17 +15,51 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
-#ifndef __TCSMART_VS_MESSAGE__
-#define __TCSMART_VS_MESSAGE__
+#include <stdio.h>
+#include <cstring>
 
-// Server to client
-#define TCSM_SVR_GENERIC     100
-#define TCSM_SVR_LOCKER      101
+#include "Cmd.h"
 
-// Client to server
-#define TCSM_CLI_GENERIC     300
+Cmd::Cmd()
+{
+}
 
-#define TCSM_VS_CLIENT_MESSAGE "<TCSM<CLIENT>>"
-#define TCSM_VS_SERVER_MESSAGE "<TCSM<SERVER>>"
+Cmd::~Cmd()
+{
+}
 
+std::string
+Cmd::execute(std::string cmd)
+{
+  static std::string result = "";
+  result.clear();
+#ifdef _WIN32
+  FILE * fp = _popen(cmd.c_str(), "r");
+#else
+  FILE * fp = popen(cmd.c_str(), "r");
 #endif
+  if (fp)
+  {
+    char tmp[256] = {0};
+    while(!feof(fp))
+    {
+      size_t bytes = fread(tmp, 1, sizeof(tmp)-1, fp);
+      if (bytes > 0)
+      {
+        result.append(tmp);
+      }
+      memset(tmp, 0, sizeof(tmp));
+    }
+#ifdef _WIN32
+    _pclose(fp);
+#else
+    pclose(fp);
+#endif
+  }
+  if (result.length() > 0 && result.at(result.length() - 1) == '\n')
+  {
+    result = result.substr(0, result.length() - 1);
+  }
+  return result;
+}
+

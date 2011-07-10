@@ -15,17 +15,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
-#ifndef __TCSMART_VS_MESSAGE__
-#define __TCSMART_VS_MESSAGE__
 
-// Server to client
-#define TCSM_SVR_GENERIC     100
-#define TCSM_SVR_LOCKER      101
+#ifndef __TCSMART_VSCLIENT_DAEMONIZER__
+#define __TCSMART_VSCLIENT_DAEMONIZER__
 
-// Client to server
-#define TCSM_CLI_GENERIC     300
+class Daemonizer
+{
+private:
 
-#define TCSM_VS_CLIENT_MESSAGE "<TCSM<CLIENT>>"
-#define TCSM_VS_SERVER_MESSAGE "<TCSM<SERVER>>"
+public:
+  Daemonizer();
+  ~Daemonizer();
+
+  bool initialize();
+};
 
 #endif

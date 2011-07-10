@@ -15,17 +15,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=============================================================================
 
-#ifndef __TCSMART_VS_MESSAGE__
-#define __TCSMART_VS_MESSAGE__
 
-// Server to client
-#define TCSM_SVR_GENERIC     100
-#define TCSM_SVR_LOCKER      101
+#ifndef __TCSMARTMGR_CMD__
+#define __TCSMARTMGR_CMD__
 
-// Client to server
-#define TCSM_CLI_GENERIC     300
+#include <string>
 
-#define TCSM_VS_CLIENT_MESSAGE "<TCSM<CLIENT>>"
-#define TCSM_VS_SERVER_MESSAGE "<TCSM<SERVER>>"
+class Cmd
+{
+public:
+  Cmd();
+  ~Cmd();
+
+  std::string execute(std::string);
+};
 
 #endif
