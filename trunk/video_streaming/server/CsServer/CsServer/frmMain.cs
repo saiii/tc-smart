@@ -54,7 +54,7 @@ namespace CsServer
                 xmlStartup = xmlStartup + "<mode value=\"start\" />";
                 xmlStartup = xmlStartup + "</vs_msg>";
                 xmlStartup = xmlStartup + "</tcsm>";
-                SAILoader.Sai_Net_Send(xmlStartup);
+                SAILoader.Sai_Net_Send(100, xmlStartup);
             }
 
             string xml = "<?xml version='1.0'?>\n";
@@ -64,7 +64,18 @@ namespace CsServer
             xml = xml + "</vs_msg>";
             xml = xml + "</tcsm>";
 
-            SAILoader.Sai_Net_Send(xml);
+            SAILoader.Sai_Net_Send(100, xml);
+
+	    if (_playing)
+	    {
+	        string xmlLock = "<?xml version='1.0'?>\n";
+	        xmlLock = xmlLock + "<tcsm>";
+	        xmlLock = xmlLock + "<ls_msg>";
+	        xmlLock = xmlLock + "<lock value=\"true\" />";
+	        xmlLock = xmlLock + "</ls_msg>";
+	        xmlLock = xmlLock + "</tcsm>";
+                SAILoader.Sai_Net_Send(101, xml);
+	    }
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -122,6 +133,14 @@ namespace CsServer
             VLCLoader.VLCInterface_Bcast_Stop(_bcastIndex);
             _bcastIndex = VLCLoader.VLCInterface_Bcast_Init();
             _playing = false;
+
+	    string xmlLock = "<?xml version='1.0'?>\n";
+	    xmlLock = xmlLock + "<tcsm>";
+	    xmlLock = xmlLock + "<ls_msg>";
+	    xmlLock = xmlLock + "<lock value=\"false\" />";
+	    xmlLock = xmlLock + "</ls_msg>";
+	    xmlLock = xmlLock + "</tcsm>";
+            SAILoader.Sai_Net_Send(101, xml);
         }
 
         private void configurationToolStripMenuItem_Click(object sender, EventArgs e)
