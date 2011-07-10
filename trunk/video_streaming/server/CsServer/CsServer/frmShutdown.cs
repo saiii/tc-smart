@@ -35,13 +35,13 @@ namespace CsServer
                 xmlStartup = xmlStartup + "</tcsm>";
                 SAILoader.Sai_Net_Send(100, xmlStartup);
 
-	        string xmlLock = "<?xml version='1.0'?>\n";
-      	        xmlLock = xmlLock + "<tcsm>";
-	        xmlLock = xmlLock + "<ls_msg>";
-	        xmlLock = xmlLock + "<lock value=\"false\" />";
-	        xmlLock = xmlLock + "</ls_msg>";
-	        xmlLock = xmlLock + "</tcsm>";
-                SAILoader.Sai_Net_Send(101, xml);
+                string xmlLock = "<?xml version='1.0'?>\n";
+                xmlLock = xmlLock + "<tcsm>";
+                xmlLock = xmlLock + "<ls_msg>";
+                xmlLock = xmlLock + "<lock value=\"false\" />";
+                xmlLock = xmlLock + "</ls_msg>";
+                xmlLock = xmlLock + "</tcsm>";
+                SAILoader.Sai_Net_Send(101, xmlLock);
 
                 Thread.Sleep(800);
             }
