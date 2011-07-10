@@ -42,10 +42,10 @@ ServerMsg::~ServerMsg()
 }
 
 void 
-ServerMsg::send(const char * msg)
+ServerMsg::send(uint32_t opcode, const char * msg)
 {
   std::string txt = msg;
-  sai::net::DataBus::GetInstance()->send(TCSM_VS_SERVER_MESSAGE, TCSM_SVR_GENERIC, txt);
+  sai::net::DataBus::GetInstance()->send(TCSM_VS_SERVER_MESSAGE, opcode, txt);
 }
 
 

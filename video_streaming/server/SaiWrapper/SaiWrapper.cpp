@@ -100,10 +100,10 @@ Sai_Net_Stop()
 }
 
 DllPrefix void __stdcall 
-Sai_Net_Send(const char * msg)
+Sai_Net_Send(uint32_t opcode, const char * msg)
 {
   ServerMsg * server = ServerMsg::GetInstance();
-  server->send(msg);
+  server->send(opcode, msg);
 }
 
 DllPrefix void __stdcall 

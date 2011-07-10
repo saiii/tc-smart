@@ -39,7 +39,7 @@ namespace CsServer
         public static extern void Sai_Net_Stop();
 
         [DllImport("SaiWrapper.dll", EntryPoint = "Sai_Net_Send")]
-        public static extern void Sai_Net_Send(string msg);
+        public static extern void Sai_Net_Send(UInt32 opcode, string msg);
 
         [DllImport("SaiWrapper.dll", EntryPoint = "Sai_Net_SetCallback")]
         private static extern void Sai_Net_SetCallback(MsgCallback cb);

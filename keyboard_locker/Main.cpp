@@ -50,6 +50,7 @@ class Locker : public DataHandler,
 private:
   IList _mList;
   IList _kList;
+  int   _cnt;
 
 private:
 
@@ -94,7 +95,8 @@ int main(int argc, char* argv[])
   return 0;
 }
 
-Locker::Locker()
+Locker::Locker():
+  _cnt(0)
 {
 }
 
@@ -229,6 +231,8 @@ Locker::initialize()
   DataBus *bus = DataBus::GetInstance();
   bus->setChannel(&channel);
 
+  schedule(2, 0);
+
   Default def;
   bus->setDefaultHandler(&def);
 
@@ -249,6 +253,7 @@ Locker::processDataEvent(DataDescriptor& desc, std::string& msg)
   std::string lck = reader.get("lock", "value");
   if (lck.length() > 0)
   {
+    _cnt = 0;
     if (lck.compare("true") == 0)
     {
       lock();
@@ -263,6 +268,16 @@ Locker::processDataEvent(DataDescriptor& desc, std::string& msg)
 void 
 Locker::timerEvent()
 {
+  if (_cnt < 100)
+  {
+    _cnt += 1;
+    if (_cnt >= 30)
+    {
+      unlock();
+      _cnt = 100;
+    }
+  }
+  schedule();
 }
 
 void 
@@ -319,5 +334,7 @@ Locker::unlock()
     txt << "xinput set-int-prop " << value << " \"Device Enabled\" 8 1" << std::endl;
     cmd.execute(txt.str()); 
   }
+  _mList.clear();
+  _kList.clear();
 }
 

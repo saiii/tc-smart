@@ -30,7 +30,7 @@ public:
   static ServerMsg* GetInstance();
   ~ServerMsg();
 
-  void send(const char * msg);
+  void send(uint32_t opcode, const char * msg);
 };
 
 #endif
