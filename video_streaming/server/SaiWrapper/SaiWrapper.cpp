@@ -42,7 +42,7 @@ using namespace sai::net;
 DllPrefix const char * __stdcall 
 Sai_Get_Version()
 {
-  static std::string ret = "(libSai) 0.0.2b, (libSaiWrapper) 0.0.1a"; // just for now
+  static std::string ret = "(libSai) 0.0.2b, (libSaiWrapper) 0.0.2a"; // just for now
   return ret.c_str();
 }
 
