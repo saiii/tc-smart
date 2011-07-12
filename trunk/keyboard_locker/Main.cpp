@@ -69,7 +69,7 @@ public:
 
 int main(int argc, char* argv[])
 {
-  printf("KeyboardLockerClient Version: 0.0.1a\n"); 
+  printf("KeyboardLockerClient Version: 0.0.2a\n"); 
   // Become a daemon
   Daemonizer daemon;
   if (!daemon.initialize())
