@@ -1,0 +1,27 @@
+DOES NOT WORK!!!
+  Duration: 01:03:15.06, start: 0.000000, bitrate: 571 kb/s
+    Stream #0.0: Audio: cook, 44100 Hz, stereo, s16, 64 kb/s
+    Stream #0.1: Video: rv40, yuv420p, 640x360, 493 kb/s, 12.05 fps, 12 tbr, 1k tbn, 12 tbc
+    Stream #0.2: Data: 0x0000
+
+
+GOOD ONLY AUDIO
+  Duration: 00:03:38.84, start: 0.000000, bitrate: 528 kb/s
+    Stream #0.0(und): Audio: aac, 44100 Hz, stereo, s16, 127 kb/s
+    Stream #0.1(und): Video: h264, yuv420p, 480x320, 389 kb/s, 30 fps, 1k tbr, 100k tbn, 200k tbc
+
+PERFECT
+  Duration: 00:46:04.89, start: 0.000000, bitrate: 1937 kb/s
+    Stream #0.0: Video: mpeg4, yuv420p, 704x396 [PAR 1:1 DAR 16:9], 29.97 tbr, 29.97 tbn, 29.98 tbc
+    Stream #0.1: Audio: mp3, 48000 Hz, 2 channels, s16, 192 kb/s
+
+PERFECT
+  Duration: 01:35:00.36, start: 0.000000, bitrate: 1030 kb/s
+    Stream #0.0: Video: mpeg4, yuv420p, 672x256 [PAR 1:1 DAR 21:8], 23.98 fps, 23.98 tbr, 23.98 tbn, 24k tbc
+    Stream #0.1: Audio: mp3, 48000 Hz, 2 channels, s16, 96 kb/s
+
+GOOD ONLY AUDIO
+  Duration: 00:04:56.87, start: 0.000000, bitrate: 359 kb/s
+    Stream #0.0: Video: h264, yuv420p, 450x360 [PAR 1:1 DAR 5:4], 359 kb/s, 50 fps, 25 tbr, 1k tbn, 50 tbc
+    Stream #0.1: Audio: aac, 44100 Hz, stereo, s16
+
