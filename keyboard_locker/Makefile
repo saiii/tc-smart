@@ -15,3 +15,14 @@ locker_client: $(OBJ)
 
 .%.o: %.cpp
 	g++ -o $@ $(INC) $(DEF) -g -c $<
+
+export: locker_client
+	@ sudo cp -f locker_client /usr/bin/
+	@ sudo tar cvfP locker_client.tar /usr/lib/libboost_system.so.1.46.1 /usr/lib/libboost_regex.so.1.46.1 /usr/lib/libSai.so /usr/lib/libxerces-c-3.1.so /usr/lib/libcrypto++.so.8 /usr/bin/locker_client 
+	@ sudo rm -f locker_client.tar.bz2
+	@ sudo bzip2 -z --best locker_client.tar
+	@ sudo chmod 666 locker_client.tar.bz2
+
+clean:
+	@ rm -Rf .*.o
+	@ rm -Rf locker_client
