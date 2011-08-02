@@ -45,17 +45,17 @@ typedef struct
 DllPrefix void __stdcall VLCInterface_Init();
 DllPrefix void __stdcall VLCInterface_Destroy();
 DllPrefix unsigned int __stdcall VLCInterface_Bcast_Init();
-DllPrefix void         __stdcall VLCInterface_Bcast_Play(unsigned int index, const char * name, const char * transcode);
+DllPrefix int          __stdcall VLCInterface_Bcast_Play(unsigned int index, const char * name, const char * transcode);
 DllPrefix void         __stdcall VLCInterface_Bcast_Pause(unsigned int index);
 DllPrefix void         __stdcall VLCInterface_Bcast_Resume(unsigned int index);
 DllPrefix void         __stdcall VLCInterface_Bcast_Stop(unsigned int index);
 
-DllPrefix unsigned int __stdcall VLCInterface_Player_Init(void *);
+DllPrefix unsigned int __stdcall VLCInterface_Player_Init(void *, const char *);
 DllPrefix void         __stdcall VLCInterface_Player_Stop(unsigned int);
 
 
-DllPrefix unsigned int __stdcall VLCInterface_Bcast_GetPosition(unsigned int);
-DllPrefix unsigned int __stdcall VLCInterface_Bcast_GetLength(unsigned int);
-DllPrefix void         __stdcall VLCInterface_Bcast_SetPosition(unsigned int, unsigned int);
+DllPrefix long long    __stdcall VLCInterface_Bcast_GetPosition(unsigned int);
+DllPrefix long long    __stdcall VLCInterface_Bcast_GetLength(unsigned int);
+DllPrefix int          __stdcall VLCInterface_Bcast_SetPosition(unsigned int, unsigned int);
 
 #endif

@@ -78,18 +78,26 @@ VLCInterface_Bcast_Init()
 }
 
 DllPrefix 
-void __stdcall 
+int __stdcall 
 VLCInterface_Bcast_Play(unsigned int index, const char * name, const char * transcode)
 {
   if (BcastList.size() == 0)
   {
-    return;
+    return -2;
   }
 
   VlcBroadcaster * bcast = BcastList.at(index);
   char *vlcOptions[] = {""};
-  libvlc_vlm_add_broadcast(bcast->instance, "tc_smart", name, transcode, 0, vlcOptions, 1, 0);
-  libvlc_vlm_play_media(bcast->instance, "tc_smart");
+  if (libvlc_vlm_add_broadcast(bcast->instance, "tc_smart", name, transcode, 0, vlcOptions, 1, 0) != 0)
+  {
+	  return -1;
+  }
+
+  if (libvlc_vlm_play_media(bcast->instance, "tc_smart")!= 0)
+  {
+	  return -3;
+  }
+  return 0;
 }
 
 DllPrefix 
@@ -134,7 +142,7 @@ VLCInterface_Bcast_Stop(unsigned int index)
 
 DllPrefix 
 unsigned int __stdcall 
-VLCInterface_Player_Init(void * hwnd)
+VLCInterface_Player_Init(void * hwnd, const char* path)
 {
   unsigned int ret = PlayerList.size();
   VlcPlayer * player = new VlcPlayer();
@@ -144,7 +152,7 @@ VLCInterface_Player_Init(void * hwnd)
   player->instance = libvlc_new(1, vlcOptions);
 
   libvlc_media_t* media = 0;
-  media = libvlc_media_new_path(player->instance, "rtp://224.1.1.1:5004");
+  media = libvlc_media_new_path(player->instance, path);
   player->player = libvlc_media_player_new_from_media(media);
   libvlc_media_player_set_hwnd(player->player, (HWND*)hwnd);
   libvlc_media_player_play(player->player);
@@ -170,7 +178,7 @@ VLCInterface_Player_Stop(unsigned int index)
 }
 
 DllPrefix 
-unsigned int __stdcall 
+long long __stdcall 
 VLCInterface_Player_GetPosition(unsigned int index)
 {
   if (BcastList.size() == 0)
@@ -179,11 +187,11 @@ VLCInterface_Player_GetPosition(unsigned int index)
   }
 
   VlcBroadcaster * bcast = BcastList.at(index);
-  return libvlc_vlm_get_media_instance_time(bcast->instance, "tc_smart", 0/* FIXME : What is this? */);
+  return (long long)libvlc_vlm_get_media_instance_position(bcast->instance, "tc_smart", 0/* FIXME : What is this? */);
 }
 
 DllPrefix 
-unsigned int __stdcall 
+long long __stdcall 
 VLCInterface_Bcast_GetLength(unsigned int index)
 {
   if (BcastList.size() == 0)
@@ -192,18 +200,18 @@ VLCInterface_Bcast_GetLength(unsigned int index)
   }
 
   VlcBroadcaster * bcast = BcastList.at(index);
-  return libvlc_vlm_get_media_instance_length(bcast->instance, "tc_smart", 0 /*FIXME : What is this?*/);
+  return (long long)libvlc_vlm_get_media_instance_length(bcast->instance, "tc_smart", 0 /*FIXME : What is this?*/);
 }
 
 DllPrefix 
-void __stdcall 
+int __stdcall 
 VLCInterface_Bcast_SetPosition(unsigned int index, unsigned int pos)
 {
   if (BcastList.size() == 0)
   {
-    return;
+    return -2;
   }
 
   VlcBroadcaster * bcast = BcastList.at(index);
-  libvlc_vlm_seek_media(bcast->instance, "tc_smart", (float)pos);
+  return libvlc_vlm_seek_media(bcast->instance, "tc_smart", (float)pos);
 }
