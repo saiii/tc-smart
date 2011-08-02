@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
+using System.Threading;
 using System.Text;
 using System.Windows.Forms;
 
@@ -16,12 +16,16 @@ namespace CsServer
         private UInt32 _bcastIndex = 0;
         private UInt32 _playerIndex = 0;
         private UInt32 _startMessages = 0;
+        private Int64 _movieLength = 0;
 
         unsafe public frmMain()
         {
             InitializeComponent();
             _bcastIndex = VLCLoader.VLCInterface_Bcast_Init();
-            _playerIndex = VLCLoader.VLCInterface_Player_Init(this.pnlMain.Handle.ToPointer());
+            _playerIndex = VLCLoader.VLCInterface_Player_Init(this.pnlMain.Handle.ToPointer(), "rtp://224.1.1.1:5004");
+            //_playerIndex = VLCLoader.VLCInterface_Player_Init(this.pnlMain.Handle.ToPointer(), "http://www.youtube.com/watch?v=vGvQ6LtkPwc");
+            //_playerIndex = VLCLoader.VLCInterface_Player_Init(this.pnlMain.Handle.ToPointer(), "http://v10.nonxt3.c.youtube.com/videoplayback?sparams=id%2Cexpire%2Cip%2Cipbits%2Citag%2Calgorithm%2Cburst%2Cfactor%2Coc%3AU0hQR1JLUV9FSkNOMF9KRVVH&algorithm=throttle-factor&itag=34&ip=0.0.0.0&burst=40&sver=3&signature=537E74A9A349F6692D169046B293F9755FDC061D.7210E2149BED4CF2CC713C799E17E804363BE217&expire=1312203600&key=yt1&ipbits=0&factor=1.25&id=cb58c007210235cd&redirect_counter=1");
+            //_playerIndex = VLCLoader.VLCInterface_Player_Init(this.pnlMain.Handle.ToPointer(), "D:\\VdoTest\\Osen.avi");
 
             string first = RegistryAccessor.GetFirst();
             if (first.Length == 0)
@@ -75,11 +79,31 @@ namespace CsServer
                 xmlLock = xmlLock + "</ls_msg>";
                 xmlLock = xmlLock + "</tcsm>";
                 SAILoader.Sai_Net_Send(101, xmlLock);
+                /*
+                if (_movieLength == 0)
+                {
+                    _movieLength = (Int64)VLCLoader.VLCInterface_Bcast_GetLength(_bcastIndex);
+                    trackBar.Minimum = 0;
+                    trackBar.Maximum = 20000;
+                }
+                else
+                {
+                    Int64 test = VLCLoader.VLCInterface_Bcast_GetLength(_bcastIndex);
+                    Int64 val = VLCLoader.VLCInterface_Player_GetPosition(_bcastIndex);
+                    if (val > _movieLength)
+                    {
+                        Console.WriteLine("Oh Shit");
+                    }
+                    float value = ((val * 20000.0f) / _movieLength);
+                    trackBar.Value = (int)value;
+                }
+                 * */
             }
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            _movieLength = 0;
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             openFileDialog.Filter = "All files (*.*)|*.*";
@@ -100,7 +124,13 @@ namespace CsServer
                 VLCLoader.VLCInterface_Bcast_Play(_bcastIndex, openFileDialog.FileName, comb);
                 btnPlay.Text = "Pause";
                 _playing = true;
+
+                _movieLength = VLCLoader.VLCInterface_Bcast_GetLength(_bcastIndex);
+                trackBar.Minimum = 0;
+                trackBar.Maximum = 20000;
+                trackBar.Value = 0;
             }
+            
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -182,6 +212,46 @@ namespace CsServer
             {
                 MessageBox.Show("Could not load the dll file!");
                 Application.Exit();
+            }
+        }
+
+        private void trackBar_Scroll(object sender, EventArgs e)
+        {
+            if (_playing)
+            {
+                //float current = (((float)trackBar.Value * 100.0f) / 20000.0f);
+                //Console.WriteLine(">> " + (UInt32)current);
+                //VLCLoader.VLCInterface_Bcast_Pause(_bcastIndex);
+                //_playing = false;
+                //Thread.Sleep(1000);
+                //Int32 ret = VLCLoader.VLCInterface_Bcast_SetPosition(_bcastIndex, (UInt32)30);
+                //Thread.Sleep(1000);
+                //VLCLoader.VLCInterface_Bcast_Resume(_bcastIndex);
+                //Console.WriteLine("### " + ret);
+                //_movieLength = 0;
+                //_playing = true;
+            }
+        }
+
+        private void openURLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmOpenURL frm = new frmOpenURL();
+            frm.ShowDialog();
+
+            if (Global.URL.Length > 0)
+            {
+                if (_playing)
+                {
+                    VLCLoader.VLCInterface_Bcast_Stop(_bcastIndex);
+                    _bcastIndex = VLCLoader.VLCInterface_Bcast_Init();
+                }
+
+                string destination = "rtp{dst=224.1.1.1,port=5004,mux=ts}";
+                string transcode = RegistryAccessor.GetTranscode();
+                string comb = transcode.Length == 0 ? "#" + destination : "#" + transcode + ":" + destination;
+                VLCLoader.VLCInterface_Bcast_Play(_bcastIndex, Global.URL, comb);
+                btnPlay.Text = "Pause";
+                _playing = true;
             }
         }
     }

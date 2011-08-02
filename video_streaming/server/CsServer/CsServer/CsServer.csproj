@@ -96,6 +96,13 @@
     <Compile Include="frmShutdown.Designer.cs">
       <DependentUpon>frmShutdown.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmOpenURL.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmOpenURL.Designer.cs">
+      <DependentUpon>frmOpenURL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Global.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBox.resx">
@@ -109,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmShutdown.resx">
       <DependentUpon>frmShutdown.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmOpenURL.resx">
+      <DependentUpon>frmOpenURL.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
