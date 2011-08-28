@@ -10,7 +10,6 @@ using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
 
-using System.Net;
 using System.Net.Sockets;
 
 namespace CsServer
@@ -23,6 +22,8 @@ namespace CsServer
         private UInt32 _playerIndex = 0;
         private UInt32 _startMessages = 0;
         private Int64 _movieLength = 0;
+
+        private frmConfiguration _frmConfig = null;
 
         unsafe public frmMain()
         {
@@ -53,6 +54,11 @@ namespace CsServer
 
         private void tmrRefresh_Tick(object sender, EventArgs e)
         {
+            if (_startMessages > 3 && _frmConfig == null)
+            {
+                _frmConfig = new frmConfiguration();
+            }
+
             if (_sizeChanged)
             {
                 _sizeChanged = false;
@@ -146,7 +152,9 @@ namespace CsServer
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            frmShutdown s = new frmShutdown();
+            s.ShowDialog();
+            this.Close();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -186,18 +194,35 @@ namespace CsServer
 
         private void configurationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            frmConfiguration config = new frmConfiguration();
-            config.ShowDialog();
+            tmrRefresh.Enabled = false;
+            Global.DISABLE_NET = true;
+
+            if (_frmConfig == null)
+            {
+                _frmConfig = new frmConfiguration();
+            }
+            _frmConfig.ShowDialog();
+
+            MessageBox.Show("Changing configuration requires restart application", "Warning", MessageBoxButtons.OK);
+            frmShutdown s = new frmShutdown();
+            s.ShowDialog();
+            this.Close();
         }
 
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            frmShutdown s = new frmShutdown();
-            s.ShowDialog();
-            VLCLoader.VLCInterface_Destroy();
-            SAILoader.Sai_Net_Stop();
-            SAIThread.thread.Abort();
-            Application.Exit();
+            try
+            {
+                Global.EXIT = true;
+                Thread.Sleep(1000);
+                VLCLoader.VLCInterface_Destroy();
+                SAILoader.Sai_Net_Stop();
+                //MessageBox.Show("Exit laew!!");
+                Thread.Sleep(500);
+                SAIThread.thread.Abort();
+                Application.Exit();
+            }catch(Exception exp)
+            {}
         }
 
         public void processDataEvent(string addr, string msg)

@@ -11,6 +11,9 @@ namespace CsServer
 {
     public partial class frmShutdown : Form
     {
+        const int MAX = 100;
+        const int STEP = 25;
+
         public frmShutdown()
         {
             InitializeComponent();
@@ -18,12 +21,23 @@ namespace CsServer
 
         private void frmShutdown_Load(object sender, EventArgs e)
         {
-            const int MAX = 100;
-            const int STEP = 25;
+            this.timer.Enabled = true;
+
             pgStatus.Maximum = MAX;
             pgStatus.Value = 0;
             this.Visible = true;
-            for (int i = 0; i < MAX; i += STEP)
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            if (Global.EXIT)
+            {
+                timer.Enabled = false;
+                this.Close();
+                return;
+            }
+
+            if (!Global.DISABLE_NET)
             {
                 pgStatus.Value += STEP;
 
@@ -42,10 +56,16 @@ namespace CsServer
                 xmlLock = xmlLock + "</ls_msg>";
                 xmlLock = xmlLock + "</tcsm>";
                 SAILoader.Sai_Net_Send(101, xmlLock);
-
-                Thread.Sleep(800);
             }
-            this.Close();
+            else
+            {
+                this.Close();
+            }
+
+            if (pgStatus.Value >= MAX)
+            {
+                this.Close();
+            }
         }
     }
 }

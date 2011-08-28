@@ -29,9 +29,6 @@ namespace CsServer
         [DllImport("SaiWrapper.dll", EntryPoint = "Sai_Get_Version")]
         public static extern string Sai_Get_Version();
 
-        [DllImport("SaiWrapper.dll", EntryPoint = "Sai_Net_GetNicList")]
-        public static extern string Sai_Net_GetNicList();
-
         [DllImport("SaiWrapper.dll", EntryPoint = "Sai_Net_Start")]
         public static extern void Sai_Net_Start(UInt32 port, string localAddress, string sendMcast, string recvMcast);
 

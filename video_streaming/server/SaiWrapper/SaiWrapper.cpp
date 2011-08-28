@@ -46,15 +46,6 @@ Sai_Get_Version()
   return ret.c_str();
 }
 
-DllPrefix 
-const char * __stdcall Sai_Net_GetNicList()
-{
-  static std::string ret = "";
-  Net * net = Net::GetInstance();
-  ret = net->getNicList(ret); 
-  return ret.c_str();
-}
-
 class DummyPrinter : public DataHandler
 {
 public:

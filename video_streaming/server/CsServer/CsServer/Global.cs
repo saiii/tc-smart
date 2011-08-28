@@ -8,5 +8,7 @@ namespace CsServer
     class Global
     {
         public static string URL = "";
+        public static bool DISABLE_NET = false;
+        public static bool EXIT = false;
     }
 }
