@@ -28,7 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pgStatus = new System.Windows.Forms.ProgressBar();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // pgStatus
@@ -37,6 +39,11 @@
             this.pgStatus.Name = "pgStatus";
             this.pgStatus.Size = new System.Drawing.Size(339, 13);
             this.pgStatus.TabIndex = 1;
+            // 
+            // timer
+            // 
+            this.timer.Interval = 800;
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
             // frmShutdown
             // 
@@ -56,6 +63,7 @@
         #endregion
 
         private System.Windows.Forms.ProgressBar pgStatus;
+        private System.Windows.Forms.Timer timer;
 
     }
 }

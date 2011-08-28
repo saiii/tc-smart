@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Text;
 using System.Windows.Forms;
+using System.Net.NetworkInformation;
 
 namespace CsServer
 {
@@ -22,35 +23,60 @@ namespace CsServer
             ToolTip1.SetToolTip(this.lstIP, "In case of multiple network interface cards, a selection of network interface card to be used is required");
 
             txtTranscode.Text = RegistryAccessor.GetTranscode();
+            Regex regex = new Regex("^[0-9]+[.][0-9]+[.][0-9]+[.][0-9]+$");
 
-            string list = SAILoader.Sai_Net_GetNicList();
-            string[] entry = list.Split(new Char[] { '!' });
-
-            lstIP.BeginUpdate();
-            lstIP.Items.Clear();
-            foreach (string et in entry)
+            foreach(NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
             {
-                string[] part = et.Split(new Char[] { ',' });
-                if (part.Length == 3)
+                IPInterfaceProperties prop = nic.GetIPProperties();
+                if (nic.Supports(NetworkInterfaceComponent.IPv4))
                 {
-                    if (part[1] == "127.0.0.1")
+                    UnicastIPAddressInformationCollection uni = prop.UnicastAddresses;
+                    if (uni != null)
                     {
-                        continue;
+                        foreach (IPAddressInformation i in uni)
+                        {
+                            string realIP = i.Address.ToString();
+                            if (realIP.CompareTo("127.0.0.1") == 0)
+                            {
+                                continue;
+                            }
+                            if (regex.Match(realIP).Success)
+                            {
+                                lstIP.Items.Add(realIP);
+                            }
+                        }
                     }
-
-                    lstIP.Items.Add(part[1]);
-                }
-                else
-                {
-                    if (part[0] == "127.0.0.1")
-                    {
-                        continue;
-                    }
-
-                    lstIP.Items.Add(part[0]);
                 }
             }
-            lstIP.EndUpdate();
+
+            //string list = SAILoader.Sai_Net_GetNicList();
+            //string[] entry = list.Split(new Char[] { '!' });
+
+            //lstIP.BeginUpdate();
+            //lstIP.Items.Clear();
+            //foreach (string et in entry)
+            //{
+            //    string[] part = et.Split(new Char[] { ',' });
+            //    if (part.Length == 3)
+            //    {
+            //        if (part[1] == "127.0.0.1")
+            //        {
+            //            continue;
+            //        }
+
+            //        lstIP.Items.Add(part[1]);
+            //    }
+            //    else
+            //    {
+            //        if (part[0] == "127.0.0.1")
+            //        {
+            //            continue;
+            //        }
+
+            //        lstIP.Items.Add(part[0]);
+            //    }
+            //}
+            //lstIP.EndUpdate();
 
             string ip = RegistryAccessor.GetIP();
             if (ip.Length == 0 || ip == "0.0.0.0")
