@@ -6,12 +6,14 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace VideoBroadcaster
 {
     public partial class FrmMain : Form
     {
         private VLCInfo info = null;
+        private NetIO net = null;
 
         public FrmMain()
         {
@@ -23,6 +25,7 @@ namespace VideoBroadcaster
                 RegistryAccessor.PutTranscode(FrmConfiguration.DEFAULT);
                 RegistryAccessor.PutFirst("false");
             }
+            net = new NetIO();
         }
 
         private void FrmMain_SizeChanged(object sender, EventArgs e)
@@ -36,6 +39,10 @@ namespace VideoBroadcaster
             FrmMain_SizeChanged(null, null);
             info = new VLCInfo();
             info.player.Start(pnlMain.Handle);
+            net.Initialize();
+
+            string xml = "<?xml version='1.0'?>\n<tcsm><vs_msg><mode value=\"start\"/></vs_msg></tcsm>";
+            net.Repeat(xml, 6);
         }
 
         private void OnExit()
@@ -45,6 +52,17 @@ namespace VideoBroadcaster
 
             info.sender.Stop();
             info.sender.Destroy();
+
+            string xml = "<?xml version='1.0'?>\n<tcsm><vs_msg><mode value=\"shutdown\"/></vs_msg></tcsm>";
+            net.Repeat(xml, 5);
+
+            try
+            {
+                Thread.Sleep(1000);
+                Application.Exit();
+            }
+            catch (Exception)
+            { }
         }
 
         private void menuAbout_Click(object sender, EventArgs e)
@@ -113,12 +131,16 @@ namespace VideoBroadcaster
         public void ConfigurationChanged()
         {
             MessageBox.Show("Configuration changed the application needs to be restarted...");
+            string xml = "<?xml version='1.0'?>\n<tcsm><vs_msg><mode value=\"shutdown\"/></vs_msg></tcsm>";
+            net.Repeat(xml, 5);
             FrmShutdown frmShutdown = new FrmShutdown();
             frmShutdown.ShowDialog();
         }
 
         private void menuExit_Click(object sender, EventArgs e)
         {
+            string xml = "<?xml version='1.0'?>\n<tcsm><vs_msg><mode value=\"shutdown\"/></vs_msg></tcsm>";
+            net.Repeat(xml, 5);
             FrmShutdown frmShutdown = new FrmShutdown();
             frmShutdown.ShowDialog();
         }
@@ -161,6 +183,9 @@ namespace VideoBroadcaster
             VLCInfo.MediaInfo mInfo = info.sender.ShowMediaObject();
             if (mInfo.instances.state.CompareTo("playing") == 0)
             {
+                string xml = "<?xml version='1.0'?>\n<tcsm><vs_msg><time value=\""+ DateTime.Now.ToString() +"\"/></vs_msg></tcsm>";
+                net.Send(xml);
+
                 btnPlay.Enabled = false;
                 trackBar.Enabled = true;
                 btnPause.Enabled = true;

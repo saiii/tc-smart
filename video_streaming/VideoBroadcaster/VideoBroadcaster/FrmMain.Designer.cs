@@ -231,28 +231,28 @@
             // menuOpen
             // 
             this.menuOpen.Name = "menuOpen";
-            this.menuOpen.Size = new System.Drawing.Size(152, 22);
+            this.menuOpen.Size = new System.Drawing.Size(148, 22);
             this.menuOpen.Text = "&Open";
             this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
             // 
             // menuOpenURL
             // 
             this.menuOpenURL.Name = "menuOpenURL";
-            this.menuOpenURL.Size = new System.Drawing.Size(152, 22);
+            this.menuOpenURL.Size = new System.Drawing.Size(148, 22);
             this.menuOpenURL.Text = "Open &URL";
             this.menuOpenURL.Click += new System.EventHandler(this.menuOpenURL_Click);
             // 
             // menuConfig
             // 
             this.menuConfig.Name = "menuConfig";
-            this.menuConfig.Size = new System.Drawing.Size(152, 22);
+            this.menuConfig.Size = new System.Drawing.Size(148, 22);
             this.menuConfig.Text = "&Configuration";
             this.menuConfig.Click += new System.EventHandler(this.menuConfig_Click);
             // 
             // menuExit
             // 
             this.menuExit.Name = "menuExit";
-            this.menuExit.Size = new System.Drawing.Size(152, 22);
+            this.menuExit.Size = new System.Drawing.Size(148, 22);
             this.menuExit.Text = "E&xit";
             this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
             // 
