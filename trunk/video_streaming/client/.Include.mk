@@ -16,6 +16,4 @@
 ##=============================================================================
 
 INC += -I.
-INC += -I..
 INC += -I/home/athip/Dev/sai/src
-INC += -I/home/athip/Dev/boost_1_46_1/BIN/include
