@@ -352,6 +352,15 @@ namespace VideoBroadcaster
                 {
                     VLCLoader.libvlc_vlm_stop_media(dataOut, NAME);
                     playing = false;
+
+                    Destroy();
+                    string[] options = { "" };
+                    dataOut = VLCLoader.libvlc_new(0, options);
+                    if (dataOut == IntPtr.Zero)
+                    {
+                        MessageBox.Show("Error! Cannot create an instance of VLC!");
+                        Application.Exit();
+                    }
                 }
             }
 
@@ -364,7 +373,7 @@ namespace VideoBroadcaster
             {
                 string txt = ShowMedia();
                 txt = txt.Replace("\\", "\\\\");
-                //Console.WriteLine(txt);
+                Console.WriteLine(txt);
                 if (playing && txt.Contains("instances\": null"))
                 {
                     Stop();
