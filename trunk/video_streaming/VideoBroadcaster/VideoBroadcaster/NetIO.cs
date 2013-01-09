@@ -111,7 +111,7 @@ namespace VideoBroadcaster
                     IPEndPoint ipep = new IPEndPoint(ip, 8010);
                     socket.Connect(ipep);
 
-                    ret = Send("<?xml version='1.0'?>\n<tcsm><vs_msg><mode value=\"start\"/></vs_msg></tcsm>");
+                    ret = Send("<?xml version='1.0'?>\n<tcsm><vs_msg><mode value=\"start\"/><detail value=\"" + FrmMain.DST + "\"/></vs_msg></tcsm>");
                 }
                 catch (Exception e)
                 {

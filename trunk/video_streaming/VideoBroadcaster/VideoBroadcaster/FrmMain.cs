@@ -14,6 +14,7 @@ namespace VideoBroadcaster
     {
         private VLCInfo info = null;
         private NetIO net = null;
+        public static string DST = "rtp{dst=224.1.1.1,port=5004,mux=ts}";
 
         public FrmMain()
         {
@@ -41,7 +42,7 @@ namespace VideoBroadcaster
             info.player.Start(pnlMain.Handle);
             net.Initialize();
 
-            string xml = "<?xml version='1.0'?>\n<tcsm><vs_msg><mode value=\"start\"/></vs_msg></tcsm>";
+            string xml = "<?xml version='1.0'?>\n<tcsm><vs_msg><mode value=\"start\"/><detail value=\""+ DST +"\"/></vs_msg></tcsm>";
             net.Repeat(xml, 6);
         }
 
@@ -82,7 +83,11 @@ namespace VideoBroadcaster
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string destination = "rtp{dst=224.1.1.1,port=5004,mux=ts}";
+                if (timer.Enabled)
+                {
+                    btnStop_Click(null, null);
+                }
+                string destination = DST;
                 string transcode = RegistryAccessor.GetTranscode();
                 string comb = transcode.Length == 0 ? "#" + destination : "#" + transcode + ":" + destination;
                 info.sender.SetOptions(openFileDialog.FileName, comb);
@@ -107,6 +112,11 @@ namespace VideoBroadcaster
         {
             if (url.Length > 0)
             {
+                if (timer.Enabled)
+                {
+                    btnStop_Click(null, null);
+                }
+
                 string destination = "rtp{dst=224.1.1.1,port=5004,mux=ts}";
                 string transcode = RegistryAccessor.GetTranscode();
                 string comb = transcode.Length == 0 ? "#" + destination : "#" + transcode + ":" + destination;
@@ -191,8 +201,13 @@ namespace VideoBroadcaster
                 btnPause.Enabled = true;
                 btnStop.Enabled = true;
                 int val = (int)(mInfo.instances.position * 100.0f);
-                trackBar.Value = val;
-                if (mInfo.instances.position >= 99.99f || !info.sender.IsPlaying())
+                bool validPos = false;
+                if (val >= trackBar.Minimum && val < trackBar.Maximum)
+                {
+                    trackBar.Value = val;
+                    validPos = true;
+                }
+                if ((validPos && mInfo.instances.position >= 99.99f) || !info.sender.IsPlaying())
                 {
                     timer.Enabled = false;
                     trackBar.Enabled = false;
