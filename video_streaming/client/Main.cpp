@@ -26,7 +26,7 @@
 int main(int argc, char* argv[])
 {
   printf("LibVLC Version: %s\n", libvlc_get_version()); 
-  printf("VideoStreamingClient Version: 0.1.1a\n"); 
+  printf("VideoStreamingClient Version: 0.1.2a\n"); 
   // Become a daemon
   Daemonizer daemon;
   if (!daemon.initialize())

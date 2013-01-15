@@ -73,15 +73,19 @@ Net::mainLoop()
   int count = 0;
   for(;;)
   {
-    fd_set readfds;
-    FD_ZERO(&readfds);
-    FD_SET(0, &readfds);
+    //fd_set readfds;
+    //FD_ZERO(&readfds);
+    //FD_SET(0, &readfds);
+    //struct timeval timeout;
+    //timeout.tv_sec  = 0;
+    //timeout.tv_usec = 500000;
+    //select(1, &readfds, 0, 0, &timeout);
+    struct timespec ts;
+    ts.tv_sec  = 0;
+    ts.tv_nsec = 500000000;
 
-    struct timeval timeout;
-    timeout.tv_sec  = 0;
-    timeout.tv_usec = 500000;
-    int ret = select(1, &readfds, 0, 0, &timeout);
-    if (ret == 0 && _listener && ++count >= 4)
+    nanosleep(&ts, 0);
+    if (_listener && ++count >= 4)
     {
       _listener->timerEvent();
       count = 0;

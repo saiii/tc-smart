@@ -40,6 +40,7 @@ private:
   Net*     _net;
   Vlc*     _vlc;
   uint32_t _svrCnt;
+  FILE *   _fp;
 
 public:
   Command();
