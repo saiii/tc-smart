@@ -101,10 +101,10 @@ Net::mainLoop()
         switch(event->type)
         {
           case START:
-            _listener->startEvent(event->msg);
+            _listener->startEvent(0);
             break;
           case UPDATE:
-            _listener->updateEvent(event->msg);
+            _listener->updateEvent(0);
             break;
           case SHUTDOWN:
             _listener->shutdownEvent();
@@ -112,7 +112,6 @@ Net::mainLoop()
         }
       }
 
-      free(event->msg);
       delete event;
     }
   }
@@ -193,7 +192,7 @@ Agent::threadEvent()
       buf[bytes] = 0;
       EventQueueList* queue = _net->getEventList();
       EventQueue * event = new EventQueue();
-      event->msg = strdup(buf);
+      //event->msg = strdup(buf);
       if (strstr(buf, "start")) 
       {
         event->type = START; 
