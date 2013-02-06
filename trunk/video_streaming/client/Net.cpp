@@ -58,6 +58,7 @@ Net::initialize()
   {
     std::string nic;
     nList->getNic(i)->toString(nic);
+    if (strcmp(nic.c_str(), "127.0.0.1") == 0) continue;
     Agent * agent = new Agent(this);
     agent->initialize((char*)nic.c_str());
     agent->schedule();
@@ -93,12 +94,12 @@ Net::mainLoop()
 
     if (_eList.size() > 0)
     {
-      EventQueue * event = _eList.front();
+      int event = _eList.front();
       _eList.erase(_eList.begin());
 
       if (_listener)
       {
-        switch(event->type)
+        switch(event)
         {
           case START:
             _listener->startEvent(0);
@@ -111,8 +112,6 @@ Net::mainLoop()
             break;
         }
       }
-
-      delete event;
     }
   }
 }
@@ -191,21 +190,18 @@ Agent::threadEvent()
     {
       buf[bytes] = 0;
       EventQueueList* queue = _net->getEventList();
-      EventQueue * event = new EventQueue();
-      //event->msg = strdup(buf);
       if (strstr(buf, "start")) 
       {
-        event->type = START; 
+        queue->push_back(0);
       }
       else if (strstr(buf, "time")) 
       {
-        event->type = UPDATE; 
+        queue->push_back(1);
       }
       else if (strstr(buf, "shutdown")) 
       {
-        event->type = SHUTDOWN; 
+        queue->push_back(2);
       }
-      queue->push_back(event);
     }
   }
 

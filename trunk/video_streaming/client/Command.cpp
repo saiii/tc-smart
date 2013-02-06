@@ -41,7 +41,7 @@ Command::Command():
   _svrCnt(0),
   _fp(0)
 {
-  _fp = fopen("/var/tmp/video.client.log", "a+");
+  _fp = fopen("/var/tmp/video.client.log", "w");
   
   std::string tm;
   GetTime(tm);

@@ -32,9 +32,9 @@ public:
 
 typedef enum
 {
-  START,
-  UPDATE,
-  SHUTDOWN
+  START = 0,
+  UPDATE = 1,
+  SHUTDOWN = 2
 }EventQueueType;
 
 typedef struct
@@ -46,8 +46,8 @@ typedef struct
 class Agent;
 typedef std::vector<Agent*>           AgentList;
 typedef std::vector<Agent*>::iterator AgentListIterator;
-typedef std::vector<EventQueue*>           EventQueueList;
-typedef std::vector<EventQueue*>::iterator EventQueueListIterator;
+typedef std::vector<int>           EventQueueList;
+typedef std::vector<int>::iterator EventQueueListIterator;
 
 class Net 
 {
