@@ -1,0 +1,1 @@
+This is a set of applications required for a class-room environment.
